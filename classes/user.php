@@ -10,12 +10,6 @@ class user
 
   //Méthodes
 
-  public function __construct($login, $password)
-  {
-    $this->setLogin($login);
-    $this->setPassword($password);
-  }
-
   public function setLogin($login)
   {
     $this->login = htmlspecialchars(trim($login));
@@ -36,7 +30,7 @@ class user
     return $this->password;
   }
 
-  public function register()
+  public function register($login, $password)
   {
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
@@ -56,20 +50,22 @@ class user
     }
   }
 
-  public function connect()
+  public function connect($login, $password)
   {
+    $login = htmlspecialchars(trim($login));  
+    $password = htmlspecialchars(trim($password));
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
     $query = $pdo->prepare($requete);
     $query->execute([
       ":login" => $this->login
     ]);
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    if (!empty($result) && $result['password'] === $this->password) {
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    if (!empty($result) && password_verify($password, $result['password'])) {
       foreach ($this as $propriete => $valeur) {
         $this->$propriete = $result[$propriete];
       }
-      return $result;
+      return $this;
     }
   }
 

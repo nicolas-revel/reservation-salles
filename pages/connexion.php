@@ -9,13 +9,12 @@ require_once($path_config . 'config.php');
 
 include($path_classes . 'user.php');
 
-if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_password'])) {
-  $check_pass = verifPassword($_POST['password'], $_POST['c_password']);
-  if ($check_pass === true) {
-    $new_user = new user($_POST['login'],$_POST['password']);
-    $crea_acout = $new_user->register();
-  }
+if (!empty($_POST['login']) && !empty($_POST['password'])) {
+  $curent_user = new user();
+  $_SESSION['user'] = $curent_user->connect($_POST['login'], $_POST['password']);
 }
+
+var_dump($_SESSION);
 
 ?>
 

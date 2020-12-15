@@ -5,6 +5,8 @@ $path_config = '../config/';
 $path_pages = '';
 $path_classes = '../classes/';
 
+
+
 ?>
 
 <!DOCTYPE html>
