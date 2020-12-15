@@ -5,7 +5,13 @@ $path_config = '../config/';
 $path_pages = '';
 $path_classes = '../classes/';
 
+include($path_classes . 'user.php');
 
+require_once($path_config . 'config.php');
+
+$curent_user = $_SESSION['user'];
+
+var_dump($_SESSION);
 
 ?>
 
@@ -22,7 +28,7 @@ $path_classes = '../classes/';
 <body>
   <main>
     <form action="profil.php" method="POST">
-      <h4>Nom d'utilisateur : <?php ?></h4>
+      <h4>Nom d'utilisateur : <?= $_SESSION['user']->getLogin(); ?></h4>
       <div class="form-group">
         <label for="login">Changer mon nom d'utilisateur :</label>
         <input type="text" class="form-control" name="login" id="login" placeholder="Mon nouveau nom d'utilisateur ici">
@@ -39,6 +45,7 @@ $path_classes = '../classes/';
         <label for="c_new_password">Confirmer mon nouveau mot de passe :</label>
         <input type="text" class="form-control" name="c_new_password" id="c_new_password" placeholder="Confirmer mon nouveau mot de passe ici">
       </div>
+      <button type="submit" class="btn btn-secondary">Mettre à jour</button>
     </form>
   </main>
 </body>

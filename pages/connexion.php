@@ -5,9 +5,9 @@ $path_config = '../config/';
 $path_pages = '';
 $path_classes = '../classes/';
 
-require_once($path_config . 'config.php');
-
 include($path_classes . 'user.php');
+
+require_once($path_config . 'config.php');
 
 if (!empty($_POST['login']) && !empty($_POST['password'])) {
   $curent_user = new user();

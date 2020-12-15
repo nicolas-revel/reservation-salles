@@ -52,7 +52,7 @@ class user
 
   public function connect($login, $password)
   {
-    $login = htmlspecialchars(trim($login));  
+    $login = htmlspecialchars(trim($login));
     $password = htmlspecialchars(trim($password));
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
@@ -89,10 +89,8 @@ class user
     }
   }
 
-  public function update(
-    $login,
-    $password
-  ) {
+  public function update($login, $password)
+  {
     $pdo = new PDO("mysql:host=localhost;dbname=classes", "root", "");
     if (!empty($login)) {
       $this->login = htmlspecialchars(trim($login));
@@ -100,12 +98,16 @@ class user
     if (!empty($password)) {
       $this->password = htmlspecialchars(trim(password_hash($password, PASSWORD_BCRYPT)));
     }
-    $requete = "UPDATE `utilisateurs` SET login = :login , password = :password , email = :email ,firstname = :firstname , lastname = :lastname WHERE id = :id";
+    $requete = "UPDATE `utilisateurs` SET login = :login , password = :password WHERE id = :id";
     $query = $pdo->prepare($requete);
     $query->execute([
       ':id' => $this->id,
       ':login' => $this->login,
       ':password' => $this->password
     ]);
+  }
+
+  public function refresh()
+  {
   }
 }
