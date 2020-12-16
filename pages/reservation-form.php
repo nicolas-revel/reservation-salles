@@ -5,6 +5,12 @@ $path_config = '../config/';
 $path_pages = '';
 $path_classes = '../classes/';
 
+include($path_classes . "event.php");
+
+require_once($path_config . "config.php");
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -18,27 +24,55 @@ $path_classes = '../classes/';
 </head>
 
 <body>
-  <main>
-    <form action="reservation-form.php" method="post">
+  <main class="container">
+    <form action="reservation-form.php" method="get">
       <div class="form-group">
         <label for="title">Titre :</label>
         <input type="text" name="title" id="title" class="form-control">
       </div>
       <div class="form-group">
         <label for="description">Description :</label>
-        <input type="text" name="description" id="description" class="form-control">
+        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
       </div>
       <div class="form-group">
-        <label for="time_creneau">Heure :</label>
-        <select class="custom-select" name="time_creneau" id="time_creneau">
-          <!-- Pour ce qui est des options de sélection :
-        - faire une boucle pour chaque créneau de disponible -->
+        <label for="time_creneau">Heure de début :</label>
+        <select class="custom-select" name="begin_time_creneau" id="time_creneau">
+          <option value="" default></option>
+          <option value="08">08:00</option>
+          <option value="09">09:00</option>
+          <option value="10">10:00</option>
+          <option value="11">11:00</option>
+          <option value="12">12:00</option>
+          <option value="13">13:00</option>
+          <option value="14">14:00</option>
+          <option value="15">15:00</option>
+          <option value="16">16:00</option>
+          <option value="17">17:00</option>
+          <option value="18">18:00</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="time_creneau">Heure de fin :</label>
+        <select class="custom-select" name="end_time_creneau" id="time_creneau">
+          <option value="" default></option>
+          <option value="09">09:00</option>
+          <option value="10">10:00</option>
+          <option value="11">11:00</option>
+          <option value="12">12:00</option>
+          <option value="13">13:00</option>
+          <option value="14">14:00</option>
+          <option value="15">15:00</option>
+          <option value="16">16:00</option>
+          <option value="17">17:00</option>
+          <option value="18">18:00</option>
+          <option value="19">19:00</option>
         </select>
       </div>
       <div class="form-group">
         <label for="date_creneau">Date :</label>
         <input type="date" name="date_creneau" id="date_creneau" class="form-control">
       </div>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
   </main>
 </body>
