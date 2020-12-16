@@ -12,6 +12,14 @@ class event
 
   //Méthodes
 
+  public function __construct($title, $desc, $debut, $fin)
+  {
+    $this->setTitle($title);
+    $this->setDesc($desc);
+    $this->setDebut($date_debut, $heure_debut);
+    $this->setFin($fin);
+  }
+
   public function setTitle($title)
   {
     $this->title = htmlspecialchars(trim($title));
@@ -22,9 +30,10 @@ class event
     $this->desc = htmlspecialchars(trim($desc));
   }
 
-  public function setDebut($debut)
+  public function setDebut($date_debut, $heure_debut)
   {
-    $this->debut = htmlspecialchars(trim($debut));
+    $datetime_debut = new DateTime();
+    // $this->debut = ;
   }
 
   public function setFin($fin)

@@ -10,3 +10,8 @@ function verifPassword($password, $c_password)
     }
   }
 }
+
+function FunctionName(Type $var = null)
+{
+  # code...
+}
