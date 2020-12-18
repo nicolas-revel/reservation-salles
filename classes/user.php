@@ -30,6 +30,11 @@ class user
     return $this->password;
   }
 
+  public function getId()
+  {
+    return $this->id;
+  }
+
   private function verifUser($login)
   {
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
@@ -49,15 +54,15 @@ class user
   public function register($login, $password)
   {
     $login = htmlspecialchars(trim($login));
-    $password = htmlspecialchars(trim(password_verify($password, PASSWORD_BCRYPT)));
+    $password = htmlspecialchars(trim(password_hash($password, PASSWORD_BCRYPT)));
     $checkuser = $this->verifUser($login);
     if ($checkuser === false) {
       $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
       $requete = "INSERT INTO utilisateurs (login, password) VALUES (:login, :password)";
       $query = $pdo->prepare($requete);
       $result = $query->execute([
-        ":login" => $this->login,
-        ":password" => $this->password
+        ":login" => $login,
+        ":password" => $password
       ]);
       return $result;
     }

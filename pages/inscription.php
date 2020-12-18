@@ -12,8 +12,8 @@ include($path_classes . 'user.php');
 if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_password'])) {
   $check_pass = verifPassword($_POST['password'], $_POST['c_password']);
   if ($check_pass === true) {
-    $new_user = new user($_POST['login'],$_POST['password']);
-    $crea_acout = $new_user->register();
+    $new_user = new user();
+    $crea_acout = $new_user->register($_POST['login'],$_POST['password']);
   }
 }
 

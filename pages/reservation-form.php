@@ -6,11 +6,19 @@ $path_pages = '';
 $path_classes = '../classes/';
 
 include($path_classes . "event.php");
+include($path_classes . "user.php");
 
 require_once($path_config . "config.php");
 
+if (!empty($_POST)) {
+  $new_event = new event($_POST["title"], $_POST['description'], $_POST['begin_creneau'], $_POST['end_creneau'], $_SESSION['user']->getId());
+  var_dump($new_event);
+  if(empty($new_event->getErrorMessage())){
+    $new_event->uploadEvent();
+  }
+}
 
-
+var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +33,7 @@ require_once($path_config . "config.php");
 
 <body>
   <main class="container">
-    <form action="reservation-form.php" method="get">
+    <form action="reservation-form.php" method="post">
       <div class="form-group">
         <label for="title">Titre :</label>
         <input type="text" name="title" id="title" class="form-control">
@@ -35,42 +43,12 @@ require_once($path_config . "config.php");
         <textarea class="form-control" name="description" id="description" rows="3"></textarea>
       </div>
       <div class="form-group">
-        <label for="time_creneau">Heure de début :</label>
-        <select class="custom-select" name="begin_time_creneau" id="time_creneau">
-          <option value="" default></option>
-          <option value="08:00">08:00</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="12:00">12:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="15:00">15:00</option>
-          <option value="16:00">16:00</option>
-          <option value="17:00">17:00</option>
-          <option value="18:00">18:00</option>
-        </select>
+        <label for="begin_creneau">Début de la réservation :</label>
+        <input type="datetime-local" name="begin_creneau" id="begin_creneau" class="form-control">
       </div>
       <div class="form-group">
-        <label for="time_creneau">Heure de fin :</label>
-        <select class="custom-select" name="end_time_creneau" id="time_creneau">
-          <option value="" default></option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="12:00">12:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="15:00">15:00</option>
-          <option value="16:00">16:00</option>
-          <option value="17:00">17:00</option>
-          <option value="18:00">18:00</option>
-          <option value="19:00">19:00</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="date_creneau">Date :</label>
-        <input type="date" name="date_creneau" id="date_creneau" class="form-control">
+        <label for="end_creneau">Fin de la réservation :</label>
+        <input type="datetime-local" name="end_creneau" id="end_creneau" class="form-control">
       </div>
       <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
