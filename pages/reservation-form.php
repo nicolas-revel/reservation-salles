@@ -11,13 +11,13 @@ include($path_classes . "user.php");
 require_once($path_config . "config.php");
 
 if (!empty($_POST)) {
-  $new_event = new event($_POST["title"], $_POST['description'], $_POST['begin_creneau'], $_POST['end_creneau'], $_SESSION['user']->getId());
+  $new_event = new event($_POST["title"], $_POST['description'], $_POST['date'], $_POST['begin_time'], $_POST['end_time'], $_SESSION['user']->getId());
   var_dump($new_event);
-  if(empty($new_event->getErrorMessage())){
+  if (empty($new_event->getErrorMessage())) {
     $new_event->uploadEvent();
   }
 }
-
+var_dump($_POST);
 var_dump($_SESSION);
 ?>
 
@@ -43,12 +43,42 @@ var_dump($_SESSION);
         <textarea class="form-control" name="description" id="description" rows="3"></textarea>
       </div>
       <div class="form-group">
-        <label for="begin_creneau">Début de la réservation :</label>
-        <input type="datetime-local" name="begin_creneau" id="begin_creneau" class="form-control">
+        <label for="date">Début de la réservation :</label>
+        <input type="date" name="date" id="date" class="form-control">
       </div>
       <div class="form-group">
-        <label for="end_creneau">Fin de la réservation :</label>
-        <input type="datetime-local" name="end_creneau" id="end_creneau" class="form-control">
+        <label for="begin_time">Heure de début :</label>
+        <select class="form-control" name="begin_time" id="begin_time">
+          <option value=""></option>
+          <option value="08:00">08:00</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="end_time">Heure de début :</label>
+        <select class="form-control" name="end_time" id="end_time">
+          <option value=""></option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+        </select>
       </div>
       <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>

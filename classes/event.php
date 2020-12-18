@@ -14,17 +14,17 @@ class event
 
   //Méthodes
 
-  public function __construct($title, $desc, $date_debut, $date_fin, $id_utilisateur)
+  public function __construct($title, $desc, $date, $debut, $fin, $id_utilisateur)
   {
-    $datetime_debut = new DateTime($date_debut, new DateTimeZone("Europe/Paris"));
-    $datetime_fin = new DateTime($date_fin, new DateTimeZone("Europe/Paris"));
+    $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
+    $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
     $diff = ($datetime_fin->getTimestamp()) - ($datetime_debut->getTimestamp());
     var_dump($diff);
     if ($diff > 0) {
       $this->setTitle($title);
       $this->setDesc($desc);
-      $this->setDebut($date_debut);
-      $this->setFin($date_fin);
+      $this->setDebut($date, $debut);
+      $this->setFin($date, $fin);
       $this->setId_Utilisateur($id_utilisateur);
     } else {
       $this->errorMessage = "Merci de choisir une date de fin ultérieur à la date de début.";
@@ -49,9 +49,9 @@ class event
     }
   }
 
-  public function setDebut($date_debut)
+  public function setDebut($date, $debut)
   {
-    $datetime_debut = new DateTime($date_debut, new DateTimeZone("Europe/Paris"));
+    $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
     $jour_date_debut = $datetime_debut->format("N");
     var_dump($jour_date_debut);
     if ($jour_date_debut !== '6' && $jour_date_debut !== '7') {
@@ -61,9 +61,9 @@ class event
     }
   }
 
-  public function setFin($date_fin)
+  public function setFin($date, $fin)
   {
-    $datetime_fin = new DateTime($date_fin, new DateTimeZone("Europe/Paris"));
+    $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
     $jour_date_fin = $datetime_fin->format("N");
     var_dump($jour_date_fin);
     if ($jour_date_fin !== '6' && $jour_date_fin !== '7') {
