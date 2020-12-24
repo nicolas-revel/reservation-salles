@@ -12,13 +12,14 @@ require_once($path_config . "config.php");
 
 if (!empty($_POST)) {
   $new_event = new event($_POST["title"], $_POST['description'], $_POST['date'], $_POST['begin_time'], $_POST['end_time'], $_SESSION['user']->getId());
-  var_dump($new_event);
+  // var_dump($new_event);
   if (empty($new_event->getErrorMessage())) {
+    // Si il n'y a pas de message d'erreur, envoie l'évènement dans la BDD.
     $new_event->uploadEvent();
   }
 }
-var_dump($_POST);
-var_dump($_SESSION);
+// var_dump($_POST);
+// var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -36,11 +37,11 @@ var_dump($_SESSION);
     <form action="reservation-form.php" method="post">
       <div class="form-group">
         <label for="title">Titre :</label>
-        <input type="text" name="title" id="title" class="form-control">
+        <input type="text" name="title" id="title" class="form-control" autofocus placeholder="Le titre de votre évènement ici">
       </div>
       <div class="form-group">
         <label for="description">Description :</label>
-        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+        <textarea class="form-control" name="description" id="description" rows="3" placeholder="La description de votre événement ici ..."></textarea>
       </div>
       <div class="form-group">
         <label for="date">Début de la réservation :</label>
@@ -64,7 +65,7 @@ var_dump($_SESSION);
         </select>
       </div>
       <div class="form-group">
-        <label for="end_time">Heure de début :</label>
+        <label for="end_time">Heure de fin :</label>
         <select class="form-control" name="end_time" id="end_time">
           <option value=""></option>
           <option value="09:00">09:00</option>

@@ -7,8 +7,15 @@ class user
   private $id;
   private $login;
   private $password;
+  private $errorMessage;
 
   //Méthodes
+
+  public function __construct($login = null, $password = null)
+  {
+    $this->setLogin($login);
+    $this->setPassword($password);
+  }
 
   public function setLogin($login)
   {
@@ -17,7 +24,7 @@ class user
 
   public function setPassword($password)
   {
-    $this->password = htmlspecialchars(trim(password_hash($password, PASSWORD_BCRYPT)));
+    $this->password = htmlspecialchars(trim($password));
   }
 
   public function getLogin()
@@ -35,8 +42,14 @@ class user
     return $this->id;
   }
 
+  public function getErrorMessage()
+  {
+    return $this->errorMessage;
+  }
+
   private function verifUser($login)
   {
+    // Permet de vérifier si l'utilisateur existe déjà
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
     $query = $pdo->prepare($requete);
@@ -44,46 +57,44 @@ class user
       ":login" => $login
     ]);
     $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    if (!empty($result)) {
-      return $result;
+    if (empty($result)) {
+      // Si aucun utilisateur ne correspond, alors la fonction renvoie true
+      return true;
     } else {
       return false;
     }
   }
 
-  public function register($login, $password)
+  public function register()
   {
-    $login = htmlspecialchars(trim($login));
-    $password = htmlspecialchars(trim(password_hash($password, PASSWORD_BCRYPT)));
-    $checkuser = $this->verifUser($login);
-    if ($checkuser === false) {
-      $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
-      $requete = "INSERT INTO utilisateurs (login, password) VALUES (:login, :password)";
-      $query = $pdo->prepare($requete);
-      $result = $query->execute([
-        ":login" => $login,
-        ":password" => $password
-      ]);
-      return $result;
-    }
+    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $requete = "INSERT INTO utilisateurs (login, password) VALUES (:login, :password)";
+    $query = $pdo->prepare($requete);
+    $result = $query->execute([
+      ":login" => $this->login,
+      ":password" => password_hash($this->password, PASSWORD_BCRYPT)
+    ]);
+    return $result;
   }
 
-  public function connect($login, $password)
+  public function connect()
   {
-    $login = htmlspecialchars(trim($login));
-    $password = htmlspecialchars(trim($password));
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
     $query = $pdo->prepare($requete);
     $query->execute([
-      ":login" => $login
+      ":login" => $this->login
     ]);
     $result = $query->fetch(PDO::FETCH_ASSOC);
-    if (!empty($result) && password_verify($password, $result['password'])) {
-      foreach ($this as $propriete => $valeur) {
-        $this->$propriete = $result[$propriete];
-      }
+    if ($result !== false && password_verify($this->password, $result['password'])) {
+      $this->id = $result['id'];
+      $this->login = $result['login'];
+      $this->password = $result['password'];
       return $this;
+    } else {
+      "entre else";
+      $this->errorMessage = "Le nom d'utilisateur ou le mot de passe est incorrect.";
+      return false;
     }
   }
 
@@ -112,7 +123,7 @@ class user
     $login = htmlspecialchars(trim($login));
     $password = htmlspecialchars(trim(password_verify($password, PASSWORD_BCRYPT)));
     $checkuser = $this->verifUser($login);
-    if ($checkuser === false) {
+    if ($checkuser === true) {
       $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
       if (!empty($login)) {
         $this->login = htmlspecialchars(trim($login));
@@ -122,11 +133,16 @@ class user
       }
       $requete = "UPDATE `utilisateurs` SET login = :login , password = :password WHERE id = :id";
       $query = $pdo->prepare($requete);
-      $query->execute([
+      $result = $query->execute([
         ':id' => $this->id,
         ':login' => $this->login,
         ':password' => $this->password
       ]);
+      $this->errorMessage = null;
+      return $result;
+    } else {
+      $this->errorMessage = "Ce nom d'utilisateur existe déjà";
+      return false;
     }
   }
 }

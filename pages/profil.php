@@ -9,6 +9,8 @@ include($path_classes . 'user.php');
 
 require_once($path_config . 'config.php');
 
+$curent_user = $_SESSION['user'];
+
 if (!empty($_SESSION['user'])) {
   if (isset($_POST['maj'])) {
     /* Permet de vérifier si le nouveau mdp est bien confirmé */
@@ -32,8 +34,6 @@ if (isset($_GET["del"])) {
 }
 
 var_dump($_SESSION);
-
-var_dump($_GET);
 
 ?>
 

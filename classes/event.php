@@ -14,20 +14,24 @@ class event
 
   //Méthodes
 
-  public function __construct($title, $desc, $date, $debut, $fin, $id_utilisateur)
+  public function __construct($title = null, $desc = null, $date = null, $debut = null, $fin = null, $id_utilisateur = null)
   {
-    $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
-    $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
-    $diff = ($datetime_fin->getTimestamp()) - ($datetime_debut->getTimestamp());
-    var_dump($diff);
-    if ($diff > 0) {
+    if (empty($this->errorMessage)) {
+      // Si il n'y a pas de message d'erreur alors créé l'objet.
+      $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
+      $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
       $this->setTitle($title);
       $this->setDesc($desc);
       $this->setDebut($date, $debut);
       $this->setFin($date, $fin);
       $this->setId_Utilisateur($id_utilisateur);
+      if ($datetime_debut->getTimestamp() > $datetime_fin->getTimestamp()) {
+        $this->errorMessage = "Merci de choisir une heure de fin ultérieur à celle de début.";
+        return false;
+      }
+      return true;
     } else {
-      $this->errorMessage = "Merci de choisir une date de fin ultérieur à la date de début.";
+      return $this->errorMessage;
     }
   }
 
@@ -51,31 +55,51 @@ class event
 
   public function setDebut($date, $debut)
   {
+    $datetime_actuel = new DateTime('now', new DateTimeZone("Europe/Paris"));
     $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
-    $jour_date_debut = $datetime_debut->format("N");
-    var_dump($jour_date_debut);
-    if ($jour_date_debut !== '6' && $jour_date_debut !== '7') {
-      $this->debut = $datetime_debut->format('Y-m-d H:i');
+    if ($datetime_debut->getTimestamp() > $datetime_actuel->getTimestamp()) {
+      // Si la date de début est ultérieure à la date actuelle, alors continue
+      $jour_date_debut = $datetime_debut->format("N");
+      // Récupère le jour du DateTime
+      if ($jour_date_debut !== '6' && $jour_date_debut !== '7') {
+        // Si le jour et différent de Samedi et Dimanche, alors set la date de début
+        $this->debut = $datetime_debut->format('Y-m-d H:i');
+        return true;
+      } else {
+        $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
+        return false;
+      }
     } else {
-      $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
+      $this->errorMessage = "Merci d'indiquer une date et heure de début ultérieure à la date et heure du jour";
+      return false;
     }
   }
 
   public function setFin($date, $fin)
   {
+    $datetime_actuel = new DateTime('now', new DateTimeZone("Europe/Paris"));
     $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
-    $jour_date_fin = $datetime_fin->format("N");
-    var_dump($jour_date_fin);
-    if ($jour_date_fin !== '6' && $jour_date_fin !== '7') {
-      $this->fin = $datetime_fin->format('Y-m-d H:i');
+    if ($datetime_fin->getTimestamp() > $datetime_actuel->getTimestamp()) {
+      // Si la date de fin est ultérieure à la date actuelle, alors continue
+      $jour_date_fin = $datetime_fin->format("N");
+      // Récupère le jour du DateTime
+      if ($jour_date_fin !== '6' && $jour_date_fin !== '7') {
+        // Si le jour et différent de Samedi et Dimanche, alors set la date de fin
+        $this->fin = $datetime_fin->format('Y-m-d H:i');
+        return true;
+      } else {
+        $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
+        return false;
+      }
     } else {
-      $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
+      $this->errorMessage = "Merci d'indiquer une date et une heure de fin ultérieur à la date et heure du jour";
+      return false;
     }
   }
 
   public function setId_Utilisateur($id_utilisateur)
   {
-    $this->id_utilisateur = $id_utilisateur;
+    return $this->id_utilisateur = $id_utilisateur;
   }
 
   public function getTitle()
@@ -108,7 +132,6 @@ class event
     $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
     $requete = "INSERT INTO reservations (title, description, debut, fin, id_utilisateur) VALUES (:titre, :description, :debut, :fin, :id_utilisateur)";
     $query = $pdo->prepare($requete);
-    var_dump($query);
     $result = $query->execute([
       ":titre" => $this->title,
       ":description" => $this->desc,
@@ -116,6 +139,5 @@ class event
       ":fin" => $this->fin,
       ":id_utilisateur" => $this->id_utilisateur,
     ]);
-    var_dump($result);
   }
 }
