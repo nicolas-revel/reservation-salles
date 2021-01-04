@@ -85,28 +85,34 @@ function creaTableEvent(int $col, int $row)
 {
   for ($i = 0; $i < $col; $i++) {
     for ($j = 0; $j < $row; $j++) {
+      // Pour chaque case du tableau, créer un objet datetime que dont tu incrémente le jour et l'heure respectivement en fonction de $i et $j;
       $date = new DateTime("yesterday 8am", new DateTimeZone("Europe/Paris"));
       $date->add(new DateInterval('P' . $i . 'DT' . $j . 'H'));
       if ($date->format('N') == 6 || $date->format('N') == 7) {
+        // Si c'est un Samedi ou un Dimanche, la case vaut "Indisponible";
         $table[$i][$j] = 'Indisponible';
       } else {
+        // Sinon la case prend la valeur de la date générée précédemment;
         $table[$i][$j] = $date->format("Y-m-d H:i");
       }
       if ($i < 1) {
+        // Si $i < 1 cela veut dire que nous sommes dans la première colonne et chaque case prend la valeur du créneau associé;
         $deb = $j + 7;
         $fin = $j + 8;
         $table[$i][$j] = "{$deb}:00 - {$fin}:00";
       }
       if ($j < 1) {
+        // Si $j < 1 cela veut dire que nous sommes dans la première ligne et chaque case prend la valeur du jour associé;
         if ($i < 1) {
+          // Si première case de première ligne, affiche;
           $table[$i][$j] = 'Créneaux / Jours';
         } else {
+          // Si autre que première case, case = Jour de la semaine Numéro du jour Mois;
           $m = $i - 1;
           $jour = new DateTime("now 8am", new DateTimeZone("Europe/Paris"));
           $jour->add(new DateInterval('P' . $m . 'D'));
           $jsemaine = displayDay($jour->format('N'));
           $mois = displayMonth($jour->format('m'));
-          var_dump($jsemaine);
           $table[$i][$j] = "$jsemaine " . $jour->format("d") . " $mois";
         }
       }
@@ -117,15 +123,18 @@ function creaTableEvent(int $col, int $row)
     foreach ($table[$row] as $col => $value) {
       foreach ($events as $event => $value) {
         if ($table[$row][$col] === $events[$event]->getDebut()) {
+          // Si la case correspond au début de l'évènement, alors active start et reserved, sort de la boucle
           $start = true;
           $reserved = true;
           break;
         } elseif ($table[$row][$col] === $events[$event]->getFin()) {
+          // Si la case correspond à la fin de l'évènement, alors active end et déactive start et reserved, sort de la boucle
           $end = true;
           $start = null;
           $reserved = null;
           break;
         } else {
+          // Sinon, remets tout à null sauf reserved car il reste actif tant qu'il ne rencontre pas de fin
           $start = null;
           $end = null;
           $table[$row][$col] = $table[$row][$col];

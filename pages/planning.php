@@ -11,10 +11,6 @@ include($path_classes . 'event.php');
 require_once($path_config . 'config.php');
 
 $planning = creaTableEvent(8, 12);
-$event = recupAllEvent();
-
-var_dump($planning);
-var_dump($event);
 
 ?>
 
