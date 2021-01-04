@@ -31,20 +31,84 @@ function recupAllEvent()
   return $result;
 }
 
+function displayDay($day)
+{
+  switch ($day) {
+    case '1':
+      return 'Lundi';
+    case '2':
+      return 'Mardi';
+    case '3':
+      return 'Mercredi';
+    case '4':
+      return 'Jeudi';
+    case '5':
+      return 'Vendredi';
+    case '6':
+      return 'Samedi';
+    case '7':
+      return 'Dimanche';
+  }
+}
+
+function displayMonth($month)
+{
+  switch ($month) {
+    case '01':
+      return 'Janvier';
+    case '02':
+      return 'Février';
+    case '03':
+      return 'Mars';
+    case '04':
+      return 'Avril';
+    case '05':
+      return 'Mai';
+    case '06':
+      return 'Juin';
+    case '07':
+      return 'Juillet';
+    case '08':
+      return 'Aout';
+    case '09':
+      return 'Septembre';
+    case '10':
+      return 'Octobre';
+    case '11':
+      return 'Novembre';
+    case '12':
+      return 'Décembre';
+  }
+}
+
 function creaTableEvent(int $col, int $row)
 {
   for ($i = 0; $i < $col; $i++) {
     for ($j = 0; $j < $row; $j++) {
-      $date = new DateTime("now 8am", new DateTimeZone("Europe/Paris"));
+      $date = new DateTime("yesterday 8am", new DateTimeZone("Europe/Paris"));
       $date->add(new DateInterval('P' . $i . 'DT' . $j . 'H'));
-      $table[$i][$j] = $date->format("Y-m-d H:i");
+      if ($date->format('N') == 6 || $date->format('N') == 7) {
+        $table[$i][$j] = 'Indisponible';
+      } else {
+        $table[$i][$j] = $date->format("Y-m-d H:i");
+      }
       if ($i < 1) {
-        $deb = $j+8;
-        $fin = $j+9;
+        $deb = $j + 7;
+        $fin = $j + 8;
         $table[$i][$j] = "{$deb}:00 - {$fin}:00";
       }
       if ($j < 1) {
-        
+        if ($i < 1) {
+          $table[$i][$j] = 'Créneaux / Jours';
+        } else {
+          $m = $i - 1;
+          $jour = new DateTime("now 8am", new DateTimeZone("Europe/Paris"));
+          $jour->add(new DateInterval('P' . $m . 'D'));
+          $jsemaine = displayDay($jour->format('N'));
+          $mois = displayMonth($jour->format('m'));
+          var_dump($jsemaine);
+          $table[$i][$j] = "$jsemaine " . $jour->format("d") . " $mois";
+        }
       }
     }
   }
@@ -87,7 +151,11 @@ function dispTableEvent(array $table)
   foreach ($table[$col] as $row => $value) {
     echo "<tr>";
     foreach ($table as $col => $value) {
-      echo '<td>' . $table[$col][$row] . '</td>';
+      if ($col == 0 || $row == 0) {
+        echo '<th>' . $table[$col][$row] . '</th>';
+      } else {
+        echo '<td>' . $table[$col][$row] . '</td>';
+      }
     }
     echo "</tr>";
     $col = $col + 1;
