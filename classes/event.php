@@ -35,6 +35,11 @@ class event
     }
   }
 
+  public function setId($id)
+  {
+    $this->id = $id;
+  }
+
   public function setTitle($title)
   {
     if (!empty($title)) {
@@ -100,6 +105,11 @@ class event
   public function setId_Utilisateur($id_utilisateur)
   {
     return $this->id_utilisateur = $id_utilisateur;
+  }
+
+  public function setErrorMessage($errorMessage)
+  {
+    return $this->errorMessage = $errorMessage;
   }
 
   public function getTitle()
