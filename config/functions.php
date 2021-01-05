@@ -14,9 +14,10 @@ function verifPassword($password, $c_password)
 function recupAllEvent()
 {
   $pdo = new PDO('mysql:host=localhost;dbname=test', 'root', '');
-  $requete = 'SELECT * FROM reservations ORDER BY debut ASC';
+  $requete = 'SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur ORDER BY debut ASC';
   $query = $pdo->query($requete);
   $result = $query->fetchAll(PDO::FETCH_ASSOC);
+  var_dump($result);
   foreach ($result as $events => $proprietes) {
     $event = new event();
     $event->setId($result[$events]['id']);
@@ -25,10 +26,14 @@ function recupAllEvent()
     $event->setDebut($result[$events]['debut'], null);
     $event->setFin($result[$events]['fin'], null);
     $event->setId_Utilisateur($result[$events]['id_utilisateur']);
+    $event->setLogin_Utilisateur($result[$events]['login']);
     $event->setErrorMessage(null);
     $result[$events] = $event;
+  }if ($result !== false) {
+    return $result;
+  } else {
+    return false;
   }
-  return $result;
 }
 
 function displayDay($day)
@@ -86,44 +91,45 @@ function creaTableEvent(int $col, int $row)
   for ($i = 0; $i < $col; $i++) {
     for ($j = 0; $j < $row; $j++) {
       // Pour chaque case du tableau, créer un objet datetime que dont tu incrémente le jour et l'heure respectivement en fonction de $i et $j;
-      $date = new DateTime("yesterday 8am", new DateTimeZone("Europe/Paris"));
+      $date = new DateTime("last sunday 7am", new DateTimeZone("Europe/Paris"));
       $date->add(new DateInterval('P' . $i . 'DT' . $j . 'H'));
       if ($date->format('N') == 6 || $date->format('N') == 7) {
         // Si c'est un Samedi ou un Dimanche, la case vaut "Indisponible";
-        $table[$i][$j] = 'Indisponible';
+        $table[$i][$j] = "<td class = 'undisp'>Indisponible</td>";
       } else {
         // Sinon la case prend la valeur de la date générée précédemment;
         $table[$i][$j] = $date->format("Y-m-d H:i");
       }
       if ($i < 1) {
         // Si $i < 1 cela veut dire que nous sommes dans la première colonne et chaque case prend la valeur du créneau associé;
-        $deb = $j + 7;
-        $fin = $j + 8;
-        $table[$i][$j] = "{$deb}:00 - {$fin}:00";
+        $horraire = $j + 7;
+        $table[$i][$j] = "<th>{$horraire}:00</th>";
       }
       if ($j < 1) {
         // Si $j < 1 cela veut dire que nous sommes dans la première ligne et chaque case prend la valeur du jour associé;
         if ($i < 1) {
           // Si première case de première ligne, affiche;
-          $table[$i][$j] = 'Créneaux / Jours';
+          $table[$i][$j] = '<th>Créneaux / Jours</th>';
         } else {
           // Si autre que première case, case = Jour de la semaine Numéro du jour Mois;
           $m = $i - 1;
-          $jour = new DateTime("now 8am", new DateTimeZone("Europe/Paris"));
+          $jour = new DateTime("this week 7am", new DateTimeZone("Europe/Paris"));
           $jour->add(new DateInterval('P' . $m . 'D'));
           $jsemaine = displayDay($jour->format('N'));
           $mois = displayMonth($jour->format('m'));
-          $table[$i][$j] = "$jsemaine " . $jour->format("d") . " $mois";
+          $table[$i][$j] = "<th>$jsemaine " . $jour->format("d") . " $mois</th>";
         }
       }
     }
   }
   $events = recupAllEvent();
+  var_dump($events);
   foreach ($table as $row => $value) {
     foreach ($table[$row] as $col => $value) {
       foreach ($events as $event => $value) {
         if ($table[$row][$col] === $events[$event]->getDebut()) {
           // Si la case correspond au début de l'évènement, alors active start et reserved, sort de la boucle
+          $content = "<a href='reservation.php?{$events[$event]->getId()}'>{$events[$event]->getTitle()}</a><p class ='desc'>{$events[$event]->getDesc()}</p><p class='person'>Organisé par {$events[$event]->getLoginUtilisateur()}</p>";
           $start = true;
           $reserved = true;
           break;
@@ -135,22 +141,26 @@ function creaTableEvent(int $col, int $row)
           break;
         } else {
           // Sinon, remets tout à null sauf reserved car il reste actif tant qu'il ne rencontre pas de fin
+          $content = "<p class='para-reserved'>Réservé par {$events[$event]->getLoginUtilisateur()}</p>";
           $start = null;
           $end = null;
           $table[$row][$col] = $table[$row][$col];
         }
       }
       if (!empty($start)) {
-        $table[$row][$col] = "Commence";
+        $table[$row][$col] = "<td class = 'start'>$content</td>";
       } elseif (!empty($reserved)) {
-        $table[$row][$col] = "Réservé";
+        $table[$row][$col] = "<td class = 'reserved'>$content</td>";
       } elseif (!empty($end)) {
-        $table[$row][$col] = "Fini";
+        $table[$row][$col] = "<td class = 'end'>Fini</td>";
       } else {
-        $table[$row][$col] = $table[$row][$col];
+        if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class = 'undisp'>Indisponible</td>") {
+          $table[$row][$col] = "<td class = 'free'>{$table[$row][$col]}</td>";
+        }
       }
     }
   }
+  var_dump($table);
   return $table;
 }
 
@@ -160,11 +170,7 @@ function dispTableEvent(array $table)
   foreach ($table[$col] as $row => $value) {
     echo "<tr>";
     foreach ($table as $col => $value) {
-      if ($col == 0 || $row == 0) {
-        echo '<th>' . $table[$col][$row] . '</th>';
-      } else {
-        echo '<td>' . $table[$col][$row] . '</td>';
-      }
+      echo $table[$col][$row];
     }
     echo "</tr>";
     $col = $col + 1;

@@ -10,7 +10,7 @@ include($path_classes . 'event.php');
 
 require_once($path_config . 'config.php');
 
-$planning = creaTableEvent(8, 12);
+$planning = creaTableEvent(8, 13);
 
 ?>
 

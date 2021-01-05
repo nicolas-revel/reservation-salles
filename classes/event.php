@@ -10,6 +10,7 @@ class event
   private $debut;
   private $fin;
   private $id_utilisateur;
+  private $login_utilisateur;
   private $errorMessage;
 
   //Méthodes
@@ -34,6 +35,8 @@ class event
       return $this->errorMessage;
     }
   }
+
+  // Setters
 
   public function setId($id)
   {
@@ -107,9 +110,21 @@ class event
     return $this->id_utilisateur = $id_utilisateur;
   }
 
+  public function setLogin_Utilisateur($login_utilisateur)
+  {
+    return $this->login_utilisateur = $login_utilisateur;
+  }
+
   public function setErrorMessage($errorMessage)
   {
     return $this->errorMessage = $errorMessage;
+  }
+
+  // Getters
+
+  public function getId()
+  {
+    return $this->id;
   }
 
   public function getTitle()
@@ -132,10 +147,17 @@ class event
     return $this->fin;
   }
 
+  public function getLoginUtilisateur()
+  {
+    return $this->login_utilisateur;
+  }
+
   public function getErrorMessage()
   {
     return $this->errorMessage;
   }
+
+  // Other fonctions
 
   public function uploadEvent()
   {
