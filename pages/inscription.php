@@ -10,10 +10,15 @@ require_once($path_config . 'config.php');
 include($path_classes . 'user.php');
 
 if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_password'])) {
+  // Vérification du mot de passe de l'utilisateur
   $check_pass = verifPassword($_POST['password'], $_POST['c_password']);
   if ($check_pass === true) {
-    $new_user = new user($_POST['login'],$_POST['password']);
-    $crea_acout = $new_user->register();
+    // Si le mot de passe est bien confirmé, alors on créer un nouvel objet user
+    $new_user = new user($_POST['login'], $_POST['password']);
+    var_dump($new_user);
+    if ($new_user->getErrorMessage() === null) {
+      $crea_acount = $new_user->register();
+    }
   }
 }
 

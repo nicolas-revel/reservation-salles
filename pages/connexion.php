@@ -10,8 +10,8 @@ include($path_classes . 'user.php');
 require_once($path_config . 'config.php');
 
 if (!empty($_POST['login']) && !empty($_POST['password'])) {
-  $curent_user = new user();
-  $_SESSION['user'] = $curent_user->connect($_POST['login'], $_POST['password']);
+  $curent_user = new user($_POST['login'], $_POST['password']);
+  $_SESSION['user'] = $curent_user->connect();
 }
 
 var_dump($_SESSION);
