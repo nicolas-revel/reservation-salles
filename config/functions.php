@@ -14,10 +14,9 @@ function verifPassword($password, $c_password)
 function recupAllEvent()
 {
   $pdo = new PDO('mysql:host=localhost;dbname=test', 'root', '');
-  $requete = 'SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur ORDER BY debut ASC';
+  $requete = 'SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur WHERE debut > NOW() ORDER BY debut ASC';
   $query = $pdo->query($requete);
   $result = $query->fetchAll(PDO::FETCH_ASSOC);
-  var_dump($result);
   foreach ($result as $events => $proprietes) {
     $event = new event();
     $event->setId($result[$events]['id']);
@@ -29,7 +28,7 @@ function recupAllEvent()
     $event->setLogin_Utilisateur($result[$events]['login']);
     $event->setErrorMessage(null);
     $result[$events] = $event;
-  }if ($result !== false) {
+  }if ($result !== null) {
     return $result;
   } else {
     return false;
@@ -122,6 +121,7 @@ function creaTableEvent(int $col, int $row)
       }
     }
   }
+  var_dump($table);
   $events = recupAllEvent();
   var_dump($events);
   foreach ($table as $row => $value) {

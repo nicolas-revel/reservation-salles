@@ -159,17 +159,43 @@ class event
 
   // Other fonctions
 
+  private function checkdispoevent($date)
+  {
+    $date = htmlspecialchars(trim($date));
+    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $requete = "SELECT * FROM reservations WHERE :date BETWEEN debut AND fin";
+    $query = $pdo->prepare($requete);
+    $query->execute([
+      ":date" => $date
+    ]);
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    if (empty($result)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public function uploadEvent()
   {
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
-    $requete = "INSERT INTO reservations (title, description, debut, fin, id_utilisateur) VALUES (:titre, :description, :debut, :fin, :id_utilisateur)";
-    $query = $pdo->prepare($requete);
-    $result = $query->execute([
-      ":titre" => $this->title,
-      ":description" => $this->desc,
-      ":debut" => $this->debut,
-      ":fin" => $this->fin,
-      ":id_utilisateur" => $this->id_utilisateur,
-    ]);
+    if ($this->checkdispoevent($this->debut) === true && $this->checkdispoevent($this->fin) === true) {
+      $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+      $requete = "INSERT INTO reservations (title, description, debut, fin, id_utilisateur) VALUES (:titre, :description, :debut, :fin, :id_utilisateur)";
+      $query = $pdo->prepare($requete);
+      $result = $query->execute([
+        ":titre" => $this->title,
+        ":description" => $this->desc,
+        ":debut" => $this->debut,
+        ":fin" => $this->fin,
+        ":id_utilisateur" => $this->id_utilisateur,
+      ]);
+      return $result;
+    } elseif ($this->checkdispoevent($this->debut) === false) {
+      var_dump($this->debut);
+      echo "entre elseifdebut";
+      return $this->errorMessage = "Ce créneau n'est pas disponible, merci de choisir une autre heure de début.";
+    } elseif ($this->checkdispoevent($this->fin) === false) {
+      return $this->errorMessage = "Ce créneau n'est pas disponible, merci d'en choisir une autre heure de fin.";
+    }
   }
 }
