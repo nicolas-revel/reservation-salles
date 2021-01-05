@@ -14,7 +14,7 @@ function verifPassword($password, $c_password)
 function recupAllEvent()
 {
   $pdo = new PDO('mysql:host=localhost;dbname=test', 'root', '');
-  $requete = 'SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur WHERE debut > NOW() ORDER BY debut ASC';
+  $requete = 'SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur ORDER BY debut ASC';
   $query = $pdo->query($requete);
   $result = $query->fetchAll(PDO::FETCH_ASSOC);
   foreach ($result as $events => $proprietes) {
@@ -129,7 +129,7 @@ function creaTableEvent(int $col, int $row)
       foreach ($events as $event => $value) {
         if ($table[$row][$col] === $events[$event]->getDebut()) {
           // Si la case correspond au début de l'évènement, alors active start et reserved, sort de la boucle
-          $content = "<a href='reservation.php?{$events[$event]->getId()}'>{$events[$event]->getTitle()}</a><p class ='desc'>{$events[$event]->getDesc()}</p><p class='person'>Organisé par {$events[$event]->getLoginUtilisateur()}</p>";
+          $content = "<a href='reservation.php?id={$events[$event]->getId()}'>{$events[$event]->getTitle()}</a><p class ='desc'>{$events[$event]->getDesc()}</p><p class='person'>Organisé par {$events[$event]->getLoginUtilisateur()}</p>";
           $start = true;
           $reserved = true;
           break;

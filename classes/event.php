@@ -40,15 +40,15 @@ class event
 
   public function setId($id)
   {
-    $this->id = $id;
+    return $this->id = $id;
   }
 
   public function setTitle($title)
   {
     if (!empty($title)) {
-      $this->title = htmlspecialchars(trim($title));
+      return $this->title = htmlspecialchars(trim($title));
     } else {
-      $this->errorMessage = "Merci d'indiquer un titre à votre réservation";
+      return $this->errorMessage = "Merci d'indiquer un titre à votre réservation";
     }
   }
 
@@ -63,47 +63,34 @@ class event
 
   public function setDebut($date, $debut)
   {
-    $datetime_actuel = new DateTime('now', new DateTimeZone("Europe/Paris"));
     $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
-    if ($datetime_debut->getTimestamp() > $datetime_actuel->getTimestamp()) {
-      // Si la date de début est ultérieure à la date actuelle, alors continue
-      $jour_date_debut = $datetime_debut->format("N");
-      // Récupère le jour du DateTime
-      if ($jour_date_debut !== '6' && $jour_date_debut !== '7') {
-        // Si le jour et différent de Samedi et Dimanche, alors set la date de début
-        $this->debut = $datetime_debut->format('Y-m-d H:i');
-        return true;
-      } else {
-        $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
-        return false;
-      }
+    $jour_date_debut = $datetime_debut->format("N");
+    // Récupère le jour du DateTime
+    if ($jour_date_debut !== '6' && $jour_date_debut !== '7') {
+      // Si le jour et différent de Samedi et Dimanche, alors set la date de début
+      $this->debut = $datetime_debut->format('Y-m-d H:i');
+      return true;
     } else {
-      $this->errorMessage = "Merci d'indiquer une date et heure de début ultérieure à la date et heure du jour";
+      $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
       return false;
     }
   }
 
   public function setFin($date, $fin)
   {
-    $datetime_actuel = new DateTime('now', new DateTimeZone("Europe/Paris"));
     $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
-    if ($datetime_fin->getTimestamp() > $datetime_actuel->getTimestamp()) {
-      // Si la date de fin est ultérieure à la date actuelle, alors continue
-      $jour_date_fin = $datetime_fin->format("N");
-      // Récupère le jour du DateTime
-      if ($jour_date_fin !== '6' && $jour_date_fin !== '7') {
-        // Si le jour et différent de Samedi et Dimanche, alors set la date de fin
-        $this->fin = $datetime_fin->format('Y-m-d H:i');
-        return true;
-      } else {
-        $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
-        return false;
-      }
+    $jour_date_fin = $datetime_fin->format("N");
+    // Récupère le jour du DateTime
+    if ($jour_date_fin !== '6' && $jour_date_fin !== '7') {
+      // Si le jour et différent de Samedi et Dimanche, alors set la date de fin
+      $this->fin = $datetime_fin->format('Y-m-d H:i');
+      return true;
     } else {
-      $this->errorMessage = "Merci d'indiquer une date et une heure de fin ultérieur à la date et heure du jour";
+      $this->errorMessage = "Merci d'indiquer un jour entre Lundi et Vendredi";
       return false;
     }
   }
+
 
   public function setId_Utilisateur($id_utilisateur)
   {
@@ -172,13 +159,31 @@ class event
     if (empty($result)) {
       return true;
     } else {
+      return $this->errorMessage = "Ce créneau n'est pas disponible, merci d'en choisir une autre heure de début ou de fin.";
+    }
+  }
+
+  private function checkdate($date)
+  {
+    $datetime = new DateTime($date, new DateTimeZone("Europe/Paris"));
+    $datetime_actuel = new DateTime('now', new DateTimeZone("Europe/Paris"));
+    $diff = ($datetime->getTimestamp()) - ($datetime_actuel->getTimestamp());
+    var_dump($diff);
+    if ($diff > 0) {
+      return true;
+    } else {
+      $this->setErrorMessage('Merci de choisir une date ultérieure à la date du jour.');
       return false;
     }
   }
 
   public function uploadEvent()
   {
-    if ($this->checkdispoevent($this->debut) === true && $this->checkdispoevent($this->fin) === true) {
+    $this->checkdate($this->debut);
+    $this->checkdate($this->fin);
+    $this->checkdispoevent($this->debut);
+    $this->checkdispoevent($this->fin);
+    if (empty($this->getErrorMessage())) {
       $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
       $requete = "INSERT INTO reservations (title, description, debut, fin, id_utilisateur) VALUES (:titre, :description, :debut, :fin, :id_utilisateur)";
       $query = $pdo->prepare($requete);
@@ -190,12 +195,30 @@ class event
         ":id_utilisateur" => $this->id_utilisateur,
       ]);
       return $result;
-    } elseif ($this->checkdispoevent($this->debut) === false) {
-      var_dump($this->debut);
-      echo "entre elseifdebut";
-      return $this->errorMessage = "Ce créneau n'est pas disponible, merci de choisir une autre heure de début.";
-    } elseif ($this->checkdispoevent($this->fin) === false) {
-      return $this->errorMessage = "Ce créneau n'est pas disponible, merci d'en choisir une autre heure de fin.";
+    }
+  }
+
+  public function recupEvent($id_event)
+  {
+    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $requete = "SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur WHERE reservations.id = :id";
+    $query = $pdo->prepare($requete);
+    $query->execute([
+      ':id' => $id_event
+    ]);
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    $this->setId($result['id']);
+    $this->setTitle($result['title']);
+    $this->setDesc($result['description']);
+    $this->setDebut($result['debut'], null);
+    $this->setFin($result['fin'], null);
+    $this->setId_Utilisateur($result['id_utilisateur']);
+    $this->setLogin_Utilisateur($result['login']);
+    $this->setErrorMessage(null);
+    if ($result !== null) {
+      return $this;
+    } else {
+      return false;
     }
   }
 }
