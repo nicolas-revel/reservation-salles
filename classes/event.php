@@ -197,7 +197,8 @@ class event
       ":fin" => $this->fin,
       ":id_utilisateur" => $this->id_utilisateur,
     ]);
-    return $result;
+    header('Location:planning.php');
+    return true;
   }
 
   public function recupEvent($id_event)

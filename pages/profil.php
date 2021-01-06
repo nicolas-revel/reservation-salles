@@ -13,13 +13,17 @@ $curent_user = $_SESSION['user'];
 
 if (!empty($_SESSION['user'])) {
   if (isset($_POST['maj'])) {
-    /* Permet de vérifier si le nouveau mdp est bien confirmé */
-    $check_pass = verifPassword($_POST['new_password'], $_POST['c_new_password']);
-    if (!$check_pass && password_verify($_POST['old_password'], $curent_user->getPassword())) {
-      /* Dans le cas où il n'y a pas de nouveau mdp */
-      $curent_user->update($_POST['login'], $_POST['new_password']);
-    } elseif ($check_pass && password_verify($_POST['old_password'], $curent_user->getPassword())) {
-      /* Dans le cas où il y a un nouveau mdp */
+    // Verification du mot de passe utilisateur
+    $curent_user->verifPassword($_POST['old_password']);
+    if (!empty($_POST['login'])) {
+      // Checker si le login est pas déjà existant
+      $curent_user->verifUser($_POST['login']);
+    }
+    if (!empty($_POST['new_password'])) {
+      // Vérifie si le nouveau mot de passe est bien confirmé
+      $curent_user->checkPassword($_POST['new_password'], $_POST['c_new_password']);
+    }
+    if (empty($curent_user->getErrorMessage())) {
       $curent_user->update($_POST['login'], $_POST['new_password']);
     }
   }
@@ -32,8 +36,6 @@ if (isset($_GET["disc"])) {
 if (isset($_GET["del"])) {
   $_SESSION['user']->delete();
 }
-
-var_dump($_SESSION);
 
 ?>
 

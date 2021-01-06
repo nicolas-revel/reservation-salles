@@ -121,9 +121,7 @@ function creaTableEvent(int $col, int $row)
       }
     }
   }
-  var_dump($table);
   $events = recupAllEvent();
-  var_dump($events);
   foreach ($table as $row => $value) {
     foreach ($table[$row] as $col => $value) {
       foreach ($events as $event => $value) {
@@ -155,7 +153,7 @@ function creaTableEvent(int $col, int $row)
         $table[$row][$col] = "<td class = 'end'>Fini</td>";
       } else {
         if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class = 'undisp'>Indisponible</td>") {
-          $table[$row][$col] = "<td class = 'free'>{$table[$row][$col]}</td>";
+          $table[$row][$col] = "<td class = 'free'>Disponible</td>";
         }
       }
     }
