@@ -13,14 +13,14 @@ function verifPassword($password, $c_password)
 
 function recupAllEvent()
 {
-  $pdo = new PDO('mysql:host=localhost;dbname=test', 'root', '');
-  $requete = 'SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur ORDER BY debut ASC';
+  $pdo = new PDO('mysql:host=localhost;dbname=reservationsalles', 'root', '');
+  $requete = 'SELECT reservations.id, titre, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur ORDER BY debut ASC';
   $query = $pdo->query($requete);
   $result = $query->fetchAll(PDO::FETCH_ASSOC);
-  foreach ($result as $events => $proprietes) {
+  foreach ($result as $events => $properties) {
     $event = new event();
     $event->setId($result[$events]['id']);
-    $event->setTitle($result[$events]['title']);
+    $event->setTitle($result[$events]['titre']);
     $event->setDesc($result[$events]['description']);
     $event->setDebut($result[$events]['debut'], null);
     $event->setFin($result[$events]['fin'], null);

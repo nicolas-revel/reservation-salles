@@ -12,15 +12,14 @@ require_once($path_config . "config.php");
 
 if (!empty($_POST)) {
   $new_event = new event($_POST["title"], $_POST['description'], $_POST['date'], $_POST['begin_time'], $_POST['end_time'], $_SESSION['user']->getId());
-  // var_dump($new_event);
+  $new_event->checkConditionDate();
+  var_dump($new_event);
   if (empty($new_event->getErrorMessage())) {
     // Si il n'y a pas de message d'erreur, envoie l'évènement dans la BDD.
     $new_event->uploadEvent();
   }
 }
-// var_dump($_POST);
-// var_dump($_SESSION);
-var_dump($new_event->getErrorMessage());
+
 ?>
 
 <!DOCTYPE html>

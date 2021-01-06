@@ -27,6 +27,11 @@ class user
     $this->password = htmlspecialchars(trim($password));
   }
 
+  public function setErrorMessage($errorMessage)
+  {
+    $this->errorMessage = $errorMessage;
+  }
+
   public function getLogin()
   {
     return $this->login;
@@ -47,27 +52,28 @@ class user
     return $this->errorMessage;
   }
 
-  private function verifUser($login)
+  public function verifUser()
   {
     // Permet de vérifier si l'utilisateur existe déjà
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
     $query = $pdo->prepare($requete);
     $query->execute([
-      ":login" => $login
+      ":login" => $this->login
     ]);
     $result = $query->fetchAll(PDO::FETCH_ASSOC);
     if (empty($result)) {
       // Si aucun utilisateur ne correspond, alors la fonction renvoie true
       return true;
     } else {
+      $this->setErrorMessage("Ce nom d'utilisateur existe déjà, merci d'en choisir un autre.");
       return false;
     }
   }
 
   public function register()
   {
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
     $requete = "INSERT INTO utilisateurs (login, password) VALUES (:login, :password)";
     $query = $pdo->prepare($requete);
     $result = $query->execute([
@@ -79,7 +85,7 @@ class user
 
   public function connect()
   {
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
     $requete = "SELECT * FROM utilisateurs WHERE login = :login";
     $query = $pdo->prepare($requete);
     $query->execute([
@@ -107,7 +113,7 @@ class user
 
   public function delete()
   {
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
     $requete = "DELETE FROM `utilisateurs` WHERE login = :login";
     $del = $pdo->prepare($requete);
     $del->execute([
@@ -124,7 +130,7 @@ class user
     $password = htmlspecialchars(trim(password_verify($password, PASSWORD_BCRYPT)));
     $checkuser = $this->verifUser($login);
     if ($checkuser === true) {
-      $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+      $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
       if (!empty($login)) {
         $this->login = htmlspecialchars(trim($login));
       }

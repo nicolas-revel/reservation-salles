@@ -15,7 +15,7 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_pa
   if ($check_pass === true) {
     // Si le mot de passe est bien confirmé, alors on créer un nouvel objet user
     $new_user = new user($_POST['login'], $_POST['password']);
-    var_dump($new_user);
+    $new_user->verifUser();
     if ($new_user->getErrorMessage() === null) {
       $crea_acount = $new_user->register();
     }
