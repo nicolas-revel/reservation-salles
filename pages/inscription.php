@@ -15,9 +15,9 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_pa
   if ($check_pass === true) {
     // Si le mot de passe est bien confirmé, alors on créer un nouvel objet user
     $new_user = new user($_POST['login'], $_POST['password']);
-    var_dump($new_user);
+    $new_user->verifUser($_POST['login']);
     if ($new_user->getErrorMessage() === null) {
-      $crea_acount = $new_user->register();
+      $new_user->register();
     }
   }
 }
@@ -25,7 +25,7 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_pa
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="w-100 h-100">
 
 <head>
   <meta charset="UTF-8">
@@ -34,24 +34,42 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_pa
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="w-100 h-100 d-flex flex-column justify-content-between">
+  <header>
+    <?php require_once($path_config . 'header.php') ?>
+  </header>
   <main>
-    <form action="inscription.php" method="post">
-      <div class="form-group">
-        <label for="login">Nom d'utilisateurs :</label>
-        <input type="text" class="form-control" name="login" id="login" placeholder="Créez votre nom d'utilisateur">
+    <?php if (isConnected() === false) : ?>
+      <form action="inscription.php" method="post">
+        <div class="form-group">
+          <label for="login">Nom d'utilisateurs :</label>
+          <input type="text" class="form-control" name="login" id="login" placeholder="Créez votre nom d'utilisateur">
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe :</label>
+          <input type="password" class="form-control" name="password" id="password" placeholder="Créez votre mot de passe">
+        </div>
+        <div class="form-group">
+          <label for="c_password">Confirmation mot de passe :</label>
+          <input type="password" class="form-control" name="c_password" id="c_password" placeholder="Confirmer votre mot de passe">
+        </div>
+        <button type="submit" class="btn btn-secondary" value="register">Inscription</button>
+      </form>
+    <?php else : ?>
+      <div class="alert alert-warning">
+        <p>
+          Pour faire une inscription, merci de vous déconnecter en premier lieu.
+        </p>
       </div>
-      <div class="form-group">
-        <label for="password">Mot de passe :</label>
-        <input type="password" class="form-control" name="password" id="password" placeholder="Créez votre mot de passe">
-      </div>
-      <div class="form-group">
-        <label for="c_password">Confirmation mot de passe :</label>
-        <input type="password" class="form-control" name="c_password" id="c_password" placeholder="Confirmer votre mot de passe">
-      </div>
-      <button type="submit" class="btn btn-secondary" value="register">Inscription</button>
-    </form>
+      <?php
+      header('refresh:3; url=' . $path_index . 'index.php');
+      ?>
+    <?php endif; ?>
   </main>
+  <footer>
+    <?php require_once($path_config . 'footer.php') ?>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -17,23 +17,11 @@ class event
 
   public function __construct($title = null, $desc = null, $date = null, $debut = null, $fin = null, $id_utilisateur = null)
   {
-    if (empty($this->errorMessage)) {
-      // Si il n'y a pas de message d'erreur alors créé l'objet.
-      $datetime_debut = new DateTime($date . $debut, new DateTimeZone("Europe/Paris"));
-      $datetime_fin = new DateTime($date . $fin, new DateTimeZone("Europe/Paris"));
-      $this->setTitle($title);
-      $this->setDesc($desc);
-      $this->setDebut($date, $debut);
-      $this->setFin($date, $fin);
-      $this->setId_Utilisateur($id_utilisateur);
-      if ($datetime_debut->getTimestamp() > $datetime_fin->getTimestamp()) {
-        $this->errorMessage = "Merci de choisir une heure de fin ultérieur à celle de début.";
-        return false;
-      }
-      return true;
-    } else {
-      return $this->errorMessage;
-    }
+    $this->setTitle($title);
+    $this->setDesc($desc);
+    $this->setDebut($date, $debut);
+    $this->setFin($date, $fin);
+    $this->setId_Utilisateur($id_utilisateur);
   }
 
   // Setters
@@ -149,7 +137,7 @@ class event
   private function checkdispoevent($date)
   {
     $date = htmlspecialchars(trim($date));
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
     $requete = "SELECT * FROM reservations WHERE :date BETWEEN debut AND fin";
     $query = $pdo->prepare($requete);
     $query->execute([
@@ -168,7 +156,6 @@ class event
     $datetime = new DateTime($date, new DateTimeZone("Europe/Paris"));
     $datetime_actuel = new DateTime('now', new DateTimeZone("Europe/Paris"));
     $diff = ($datetime->getTimestamp()) - ($datetime_actuel->getTimestamp());
-    var_dump($diff);
     if ($diff > 0) {
       return true;
     } else {
@@ -177,38 +164,54 @@ class event
     }
   }
 
-  public function uploadEvent()
+  private function checkAntePost()
+  {
+    $datetime_debut = new DateTime($this->getDebut(), new DateTimeZone("Europe/Paris"));
+    $datetime_fin = new DateTime($this->getFin(), new DateTimeZone("Europe/Paris"));
+    if ($datetime_debut->getTimestamp() >= $datetime_fin->getTimestamp()) {
+      $this->setErrorMessage("Merci de choisir une heure de fin ultérieur à celle de début.");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public function checkConditionDate()
   {
     $this->checkdate($this->debut);
     $this->checkdate($this->fin);
     $this->checkdispoevent($this->debut);
     $this->checkdispoevent($this->fin);
-    if (empty($this->getErrorMessage())) {
-      $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
-      $requete = "INSERT INTO reservations (title, description, debut, fin, id_utilisateur) VALUES (:titre, :description, :debut, :fin, :id_utilisateur)";
-      $query = $pdo->prepare($requete);
-      $result = $query->execute([
-        ":titre" => $this->title,
-        ":description" => $this->desc,
-        ":debut" => $this->debut,
-        ":fin" => $this->fin,
-        ":id_utilisateur" => $this->id_utilisateur,
-      ]);
-      return $result;
-    }
+    $this->checkAntePost();
+  }
+
+  public function uploadEvent()
+  {
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
+    $requete = "INSERT INTO reservations (titre, description, debut, fin, id_utilisateur) VALUES (:titre, :description, :debut, :fin, :id_utilisateur)";
+    $query = $pdo->prepare($requete);
+    $result = $query->execute([
+      ":titre" => $this->title,
+      ":description" => $this->desc,
+      ":debut" => $this->debut,
+      ":fin" => $this->fin,
+      ":id_utilisateur" => $this->id_utilisateur,
+    ]);
+    header('Location:planning.php');
+    return true;
   }
 
   public function recupEvent($id_event)
   {
-    $pdo = new PDO("mysql:host=localhost;dbname=test", "root", "");
-    $requete = "SELECT reservations.id, title, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur WHERE reservations.id = :id";
+    $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
+    $requete = "SELECT reservations.id, titre, description, debut, fin, id_utilisateur, utilisateurs.login FROM reservations INNER JOIN utilisateurs ON utilisateurs.id = reservations.id_utilisateur WHERE reservations.id = :id";
     $query = $pdo->prepare($requete);
     $query->execute([
       ':id' => $id_event
     ]);
     $result = $query->fetch(PDO::FETCH_ASSOC);
     $this->setId($result['id']);
-    $this->setTitle($result['title']);
+    $this->setTitle($result['titre']);
     $this->setDesc($result['description']);
     $this->setDebut($result['debut'], null);
     $this->setFin($result['fin'], null);

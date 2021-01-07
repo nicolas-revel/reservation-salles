@@ -13,13 +13,17 @@ $curent_user = $_SESSION['user'];
 
 if (!empty($_SESSION['user'])) {
   if (isset($_POST['maj'])) {
-    /* Permet de vérifier si le nouveau mdp est bien confirmé */
-    $check_pass = verifPassword($_POST['new_password'], $_POST['c_new_password']);
-    if (!$check_pass && password_verify($_POST['old_password'], $curent_user->getPassword())) {
-      /* Dans le cas où il n'y a pas de nouveau mdp */
-      $curent_user->update($_POST['login'], $_POST['new_password']);
-    } elseif ($check_pass && password_verify($_POST['old_password'], $curent_user->getPassword())) {
-      /* Dans le cas où il y a un nouveau mdp */
+    // Verification du mot de passe utilisateur
+    $curent_user->verifPassword($_POST['old_password']);
+    if (!empty($_POST['login'])) {
+      // Checker si le login est pas déjà existant
+      $curent_user->verifUser($_POST['login']);
+    }
+    if (!empty($_POST['new_password'])) {
+      // Vérifie si le nouveau mot de passe est bien confirmé
+      $curent_user->checkPassword($_POST['new_password'], $_POST['c_new_password']);
+    }
+    if (empty($curent_user->getErrorMessage())) {
       $curent_user->update($_POST['login'], $_POST['new_password']);
     }
   }
@@ -33,12 +37,10 @@ if (isset($_GET["del"])) {
   $_SESSION['user']->delete();
 }
 
-var_dump($_SESSION);
-
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="w-100 h-100">
 
 <head>
   <meta charset="UTF-8">
@@ -47,9 +49,12 @@ var_dump($_SESSION);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="w-100 h-100 d-flex flex-column justify-content-between">
+  <header>
+    <?php require_once($path_config . 'header.php') ?>
+  </header>
   <main>
-    <?php if ($_SESSION['user']->getLogin() !== null) : ?>
+    <?php if (isConnected() === true) : ?>
       <form action="profil.php" method="POST">
         <h4>Nom d'utilisateur : <?= $_SESSION['user']->getLogin(); ?></h4>
         <div class="form-group">
@@ -74,8 +79,21 @@ var_dump($_SESSION);
         <button class="btn btn-danger" name="del">Supprimer mon profil</button>
         <button class="btn btn-warning" name="disc">Déconnexion</button>
       </form>
+    <?php else : ?>
+      <div class="alert alert-danger">
+        <p>
+          Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
+        </p>
+      </div>
+      <?php
+      header('refresh:3; url=' . $path_index . 'index.php');
+      die; ?>
     <?php endif; ?>
   </main>
+  <footer>
+    <?php require_once($path_config . 'footer.php') ?>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 
 </html>
