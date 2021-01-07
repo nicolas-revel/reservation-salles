@@ -158,7 +158,6 @@ function creaTableEvent(int $col, int $row)
       }
     }
   }
-  var_dump($table);
   return $table;
 }
 
@@ -172,5 +171,14 @@ function dispTableEvent(array $table)
     }
     echo "</tr>";
     $col = $col + 1;
+  }
+}
+
+function isConnected()
+{
+  if (empty($_SESSION['user']) || $_SESSION['user']->getLogin() === null) {
+    return false;
+  } else {
+    return true;
   }
 }

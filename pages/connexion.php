@@ -29,19 +29,37 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
 </head>
 
 <body>
+  <header>
+    <?php require_once($path_config . 'header.php') ?>
+  </header>
   <main>
-    <form action="connexion.php" method="post">
-      <div class="form-group">
-        <label for="login">Nom d'utilisateur :</label>
-        <input type="text" name="login" id="login" class="form-control" placeholder="Votre nom d'utilisateur ici" required>
+    <?php if (isConnected() === false) : ?>
+      <form action="connexion.php" method="post">
+        <div class="form-group">
+          <label for="login">Nom d'utilisateur :</label>
+          <input type="text" name="login" id="login" class="form-control" placeholder="Votre nom d'utilisateur ici" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe :</label>
+          <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe ici" required>
+        </div>
+        <button type="submit" class="btn btn-secondary" value="connexion">Connexion</button>
+      </form>
+    <?php else : ?>
+      <div class="alert alert-danger">
+        <p>
+          Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
+        </p>
       </div>
-      <div class="form-group">
-        <label for="password">Mot de passe :</label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe ici" required>
-      </div>
-      <button type="submit" class="btn btn-secondary" value="connexion">Connexion</button>
-    </form>
+      <?php
+      header('refresh:3; url=' . $path_index . 'index.php');
+      die; ?>
+    <?php endif; ?>
   </main>
+  <footer>
+    <?php require_once($path_config . 'header.php') ?>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 
 </html>
