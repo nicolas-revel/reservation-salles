@@ -19,7 +19,7 @@ var_dump($_GET);
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="w-100 h-100">
 
 <head>
   <meta charset="UTF-8">
@@ -28,7 +28,7 @@ var_dump($_GET);
   <title>Réservation</title>
 </head>
 
-<body>
+<body class="w-100 h-100 d-flex flex-column justify-content-between">
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>

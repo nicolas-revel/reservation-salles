@@ -85,12 +85,12 @@ function displayMonth($month)
   }
 }
 
-function creaTableEvent(int $col, int $row)
+function creaTableEvent(int $col, int $row, int $week)
 {
   for ($i = 0; $i < $col; $i++) {
     for ($j = 0; $j < $row; $j++) {
       // Pour chaque case du tableau, créer un objet datetime que dont tu incrémente le jour et l'heure respectivement en fonction de $i et $j;
-      $date = new DateTime("last sunday 7am", new DateTimeZone("Europe/Paris"));
+      $date = new DateTime("last sunday 7am $week week", new DateTimeZone("Europe/Paris"));
       $date->add(new DateInterval('P' . $i . 'DT' . $j . 'H'));
       if ($date->format('N') == 6 || $date->format('N') == 7) {
         // Si c'est un Samedi ou un Dimanche, la case vaut "Indisponible";
@@ -102,21 +102,21 @@ function creaTableEvent(int $col, int $row)
       if ($i < 1) {
         // Si $i < 1 cela veut dire que nous sommes dans la première colonne et chaque case prend la valeur du créneau associé;
         $horraire = $j + 7;
-        $table[$i][$j] = "<th>{$horraire}:00</th>";
+        $table[$i][$j] = "<th class='table-dark' scope='row'>{$horraire}:00</th>";
       }
       if ($j < 1) {
         // Si $j < 1 cela veut dire que nous sommes dans la première ligne et chaque case prend la valeur du jour associé;
         if ($i < 1) {
           // Si première case de première ligne, affiche;
-          $table[$i][$j] = '<th>Créneaux / Jours</th>';
+          $table[$i][$j] = "<th class='table-dark'>Créneaux / Jours</th>";
         } else {
           // Si autre que première case, case = Jour de la semaine Numéro du jour Mois;
           $m = $i - 1;
-          $jour = new DateTime("this week 7am", new DateTimeZone("Europe/Paris"));
+          $jour = new DateTime("this week 7am $week week", new DateTimeZone("Europe/Paris"));
           $jour->add(new DateInterval('P' . $m . 'D'));
           $jsemaine = displayDay($jour->format('N'));
           $mois = displayMonth($jour->format('m'));
-          $table[$i][$j] = "<th>$jsemaine " . $jour->format("d") . " $mois</th>";
+          $table[$i][$j] = "<th class='table-dark' scope='col'>$jsemaine " . $jour->format("d") . " $mois</th>";
         }
       }
     }
@@ -127,7 +127,7 @@ function creaTableEvent(int $col, int $row)
       foreach ($events as $event => $value) {
         if ($table[$row][$col] === $events[$event]->getDebut()) {
           // Si la case correspond au début de l'évènement, alors active start et reserved, sort de la boucle
-          $content = "<a href='reservation.php?id={$events[$event]->getId()}'>{$events[$event]->getTitle()}</a><p class ='desc'>{$events[$event]->getDesc()}</p><p class='person'>Organisé par {$events[$event]->getLoginUtilisateur()}</p>";
+          $content = "<a href='reservation.php?id={$events[$event]->getId()}'>{$events[$event]->getTitle()}</a><p class ='desc'>{$events[$event]->getDesc()}</p><p class='person'>Evènement organisé par {$events[$event]->getLoginUtilisateur()}</p>";
           $start = true;
           $reserved = true;
           break;
@@ -146,14 +146,14 @@ function creaTableEvent(int $col, int $row)
         }
       }
       if (!empty($start)) {
-        $table[$row][$col] = "<td class = 'start'>$content</td>";
+        $table[$row][$col] = "<td class = 'table-success'>$content</td>";
       } elseif (!empty($reserved)) {
-        $table[$row][$col] = "<td class = 'reserved'>$content</td>";
+        $table[$row][$col] = "<td class = 'table-secondary'>$content</td>";
       } elseif (!empty($end)) {
-        $table[$row][$col] = "<td class = 'end'>Fini</td>";
+        $table[$row][$col] = "<td class = 'table-dark'>Fini</td>";
       } else {
         if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class = 'undisp'>Indisponible</td>") {
-          $table[$row][$col] = "<td class = 'free'>Disponible</td>";
+          $table[$row][$col] = "<td class = 'table-light'><p>Disponible</p></td>";
         }
       }
     }

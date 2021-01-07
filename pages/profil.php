@@ -40,7 +40,7 @@ if (isset($_GET["del"])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="w-100 h-100">
 
 <head>
   <meta charset="UTF-8">
@@ -49,7 +49,7 @@ if (isset($_GET["del"])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="w-100 h-100 d-flex flex-column justify-content-between">
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
