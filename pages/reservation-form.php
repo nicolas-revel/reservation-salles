@@ -4,6 +4,7 @@ $path_index = '../';
 $path_config = '../config/';
 $path_pages = '';
 $path_classes = '../classes/';
+$path_css = '../css/';
 
 include($path_classes . "event.php");
 include($path_classes . "user.php");
@@ -34,29 +35,30 @@ if (isset($_GET["d"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulaire de réservation</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="stylesheet" href="<?=$path_css?>custom.css">
 </head>
 
 <body class="w-100 h-100 d-flex flex-column justify-content-between">
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main class="container">
+  <main class="container w-50">
     <?php if (isConnected() === true) : ?>
       <h1>Créez votre réservation</h1>
       <form action="reservation-form.php" method="post">
-        <div class="form-group">
+        <div class="form-group my-2">
           <label for="title">Titre :</label>
           <input type="text" name="title" id="title" class="form-control" autofocus placeholder="Le titre de votre évènement ici">
         </div>
-        <div class="form-group">
+        <div class="form-group my-2">
           <label for="description">Description :</label>
           <textarea class="form-control" name="description" id="description" rows="3" placeholder="La description de votre événement ici ..."></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group my-2">
           <label for="date">Début de la réservation :</label>
           <input type="date" name="date" id="date" class="form-control">
         </div>
-        <div class="form-group">
+        <div class="form-group my-2">
           <label for="begin_time">Heure de début :</label>
           <select class="form-control" name="begin_time" id="begin_time">
             <option value=""></option>
@@ -73,7 +75,7 @@ if (isset($_GET["d"])) {
             <option value="18:00">18:00</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group my-2">
           <label for="end_time">Heure de fin :</label>
           <select class="form-control" name="end_time" id="end_time">
             <option value=""></option>
@@ -90,7 +92,7 @@ if (isset($_GET["d"])) {
             <option value="19:00">19:00</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <button type="submit" class="btn btn-secondary">Enregistrer</button>
       </form>
       <?php if(isset($new_event) && !empty($new_event->getErrorMessage())) : ?>
         <div class="alert alert-danger" role="alert">

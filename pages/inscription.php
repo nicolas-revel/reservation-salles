@@ -41,23 +41,23 @@ if (isset($_GET["d"])) {
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main class="container d-flex flex-column">
+  <main class="container w-50 h-50 d-flex flex-column">
     <?php if (isConnected() === false) : ?>
       <h1>Vous inscrire</h1>
       <form action="inscription.php" method="post">
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="login">Nom d'utilisateurs :</label>
           <input type="text" class="form-control" name="login" id="login" placeholder="Créez votre nom d'utilisateur">
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="password">Mot de passe :</label>
           <input type="password" class="form-control" name="password" id="password" placeholder="Créez votre mot de passe">
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="c_password">Confirmation mot de passe :</label>
           <input type="password" class="form-control" name="c_password" id="c_password" placeholder="Confirmer votre mot de passe">
         </div>
-        <button type="submit" class="btn btn-secondary" value="register">Inscription</button>
+        <button type="submit" class="btn btn-secondary my-3" value="register">Inscription</button>
       </form>
     <?php if (isset($new_user) && !empty($new_user->getErrorMessage())) : ?>
       <div class="alert alert-danger" role="alert">

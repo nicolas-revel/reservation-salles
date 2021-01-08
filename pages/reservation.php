@@ -17,9 +17,6 @@ if (isset($_GET["d"])) {
   $_SESSION['user']->disconnect($path_index);
 }
 
-var_dump($curent_event);
-var_dump($_GET);
-
 ?>
 
 <!DOCTYPE html>
@@ -36,18 +33,24 @@ var_dump($_GET);
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main>
+  <main class="container h-50 d-flex flex-column justify-content-between">
     <h1><?= $curent_event->getTitle(); ?></h1>
-    <h2>Créé par <?= $curent_event->getLoginUtilisateur(); ?></h2>
+    <h2 class="">Créé par <?= $curent_event->getLoginUtilisateur(); ?></h2>
     <h3>Description</h3>
     <p><?= $curent_event->getDesc(); ?></p>
-    <h3>Date de début :</h3>
-    <p><?= $curent_event->getDebut(); ?></p>
-    <h3>Date de fin :</h3>
-    <p><?= $curent_event->getFin(); ?></p>
+    <div class="d-flex justify-content-between w-50">
+      <div>
+        <h3>Date de début :</h3>
+        <p><?= $curent_event->getDebut(); ?></p>
+      </div>
+      <div>
+        <h3>Date de fin :</h3>
+        <p><?= $curent_event->getFin(); ?></p>
+      </div>
+    </div>
   </main>
   <footer>
-  <?php require_once($path_config . 'footer.php') ?>
+    <?php require_once($path_config . 'footer.php') ?>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>

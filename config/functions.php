@@ -83,7 +83,7 @@ function creaTableEvent(int $col, int $row, int $week)
       $date->add(new DateInterval('P' . $i . 'DT' . $j . 'H'));
       if ($date->format('N') == 6 || $date->format('N') == 7) {
         // Si c'est un Samedi ou un Dimanche, la case vaut "Indisponible";
-        $table[$i][$j] = "<td class='table-danger'>Indisponible</td>";
+        $table[$i][$j] = "<td class='table-danger base-col'>Indisponible</td>";
       } else {
         // Sinon la case prend la valeur de la date générée précédemment;
         $table[$i][$j] = $date->format("Y-m-d H:i");
@@ -91,7 +91,7 @@ function creaTableEvent(int $col, int $row, int $week)
       if ($i < 1) {
         // Si $i < 1 cela veut dire que nous sommes dans la première colonne et chaque case prend la valeur du créneau associé;
         $horraire = $j + 7;
-        $table[$i][$j] = "<th class='table-dark' scope='row'>{$horraire}:00</th>";
+        $table[$i][$j] = "<th class='table-dark head-col' scope='row'>{$horraire}:00</th>";
       }
       if ($j < 1) {
         // Si $j < 1 cela veut dire que nous sommes dans la première ligne et chaque case prend la valeur du jour associé;
@@ -105,7 +105,7 @@ function creaTableEvent(int $col, int $row, int $week)
           $jour->add(new DateInterval('P' . $m . 'D'));
           $jsemaine = displayDay($jour->format('N'));
           $mois = displayMonth($jour->format('m'));
-          $table[$i][$j] = "<th class='table-dark' scope='col'>$jsemaine " . $jour->format("d") . "$mois</th>";
+          $table[$i][$j] = "<th class='table-dark base-col' scope='col'>$jsemaine " . $jour->format("d") . "$mois</th>";
         }
       }
     }
@@ -116,34 +116,34 @@ function creaTableEvent(int $col, int $row, int $week)
       foreach ($events as $event => $value) {
         if ($table[$row][$col] === $events[$event]->getDebut()) {
           // Si la case correspond au début de l'évènement, alors active start et reserved, sort de la boucle
-          $content = "<a href='reservation.php?id={$events[$event]->getId()}'>{$events[$event]->getTitle()}</a><p class ='desc'>{$events[$event]->getDesc()}</p><p class='person'>Evènement organisé par {$events[$event]->getLoginUtilisateur()}</p>";
+          $content = "<div class='content'><a href='reservation.php?id={$events[$event]->getId()}'>{$events[$event]->getTitle()}</a></div>";
           $start = true;
           $reserved = true;
           break;
         } elseif ($table[$row][$col] === $events[$event]->getFin()) {
           // Si la case correspond à la fin de l'évènement, alors active end et déactive start et reserved, sort de la boucle
-          $content = "Fin de {$events[$event]->getTitle()}";
+          $content = "<div class='content'>Fin de {$events[$event]->getTitle()}</div>";
           $end = true;
           $start = null;
           $reserved = null;
           break;
         } else {
           // Sinon, remets tout à null sauf reserved car il reste actif tant qu'il ne rencontre pas de fin
-          $content = "<p class='para-reserved'>Réservé par {$events[$event]->getLoginUtilisateur()}</p>";
+          $content = "<div class='content'><p class='para-reserved'>Réservé par {$events[$event]->getLoginUtilisateur()}</p></div>";
           $start = null;
           $end = null;
           $table[$row][$col] = $table[$row][$col];
         }
       }
       if (!empty($start)) {
-        $table[$row][$col] = "<td class = 'table-success'>$content</td>";
+        $table[$row][$col] = "<td class = 'table-success base-col'>$content</td>";
       } elseif (!empty($reserved)) {
-        $table[$row][$col] = "<td class = 'table-secondary'>$content</td>";
+        $table[$row][$col] = "<td class = 'table-secondary base-col'>$content</td>";
       } elseif (!empty($end)) {
-        $table[$row][$col] = "<td class = 'table-dark'>$content</td>";
+        $table[$row][$col] = "<td class = 'table-dark base-col'>$content</td>";
       } else {
-        if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class='table-danger'>Indisponible</td>") {
-          $table[$row][$col] = "<td class = 'table-light'><p>Disponible</p></td>";
+        if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class='table-danger base-col'>Indisponible</td>") {
+          $table[$row][$col] = "<td class = 'table-light base-col'><div class='content'><p>Disponible</p></div></td>";
         }
       }
     }

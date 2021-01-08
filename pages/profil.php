@@ -53,31 +53,31 @@ if (isset($_GET["del"])) {
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main class="container">
+  <main class="container w-75">
     <?php if (isConnected() === true) : ?>
-    <h1>Votre profil</h1>
+    <h1 class="my-3">Votre profil</h1>
       <form action="profil.php" method="POST">
         <h4>Nom d'utilisateur : <?= $_SESSION['user']->getLogin(); ?></h4>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="login">Changer mon nom d'utilisateur :</label>
           <input type="text" class="form-control" name="login" id="login" placeholder="Mon nouveau nom d'utilisateur ici">
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="old_password">Ancien mot de passe :</label>
           <input type="password" class="form-control" name="old_password" id="old_password" placeholder="Mon ancien mot de passe">
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="new_password">Mon nouveau mot de passe :</label>
           <input type="password" class="form-control" name="new_password" id="new_password" placeholder="Mon nouveau mot de passe ici">
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="c_new_password">Confirmer mon nouveau mot de passe :</label>
           <input type="password" class="form-control" name="c_new_password" id="c_new_password" placeholder="Confirmer mon nouveau mot de passe ici">
         </div>
         <button type="submit" class="btn btn-secondary" name="maj">Mettre à jour</button>
       </form>
-      <a href="<?= $_SERVER['PHP_SELF'] . '?d' ?>"><button class="btn btn-secondary btn-outline-warning my-2 my-sm-0 mr-5">Déconnexion</button></a>
-      <a href="<?= $_SERVER['PHP_SELF'] . '?del' ?>"><button class="btn btn-secondary btn-outline-danger my-2 my-sm-0 mr-5">Supprimer mon profil</button></a>
+      <a href="<?= $_SERVER['PHP_SELF'] . '?d' ?>"><button class="btn btn-secondary btn-outline-warning m-4">Déconnexion</button></a>
+      <a href="<?= $_SERVER['PHP_SELF'] . '?del' ?>"><button class="btn btn-secondary btn-outline-danger ">Supprimer mon profil</button></a>
     <?php else : ?>
       <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
         Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.

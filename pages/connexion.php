@@ -36,19 +36,19 @@ if (isset($_GET["d"])) {
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main class="container">
+  <main class="container w-50 d-flex flex-column justify-content-between">
     <?php if (isConnected() === false) : ?>
       <h1>Vous connecter</h1>
       <form action="connexion.php" method="post">
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="login">Nom d'utilisateur :</label>
           <input type="text" name="login" id="login" class="form-control" placeholder="Votre nom d'utilisateur ici" required>
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="password">Mot de passe :</label>
           <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe ici" required>
         </div>
-        <button type="submit" class="btn btn-secondary" value="connexion">Connexion</button>
+        <button type="submit" class="btn btn-secondary my-3" value="connexion">Connexion</button>
       </form>
     <?php else : ?>
       <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">

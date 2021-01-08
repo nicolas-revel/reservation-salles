@@ -4,6 +4,8 @@ $path_index = '';
 $path_config = 'config/';
 $path_pages = 'pages/';
 $path_classes = 'classes/';
+$path_css = 'css/';
+
 
 include($path_classes . 'user.php');
 include($path_classes . 'event.php');
@@ -24,13 +26,14 @@ if (isset($_GET["d"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accueil</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="stylesheet" href="<?=$path_css?>custom.css">
 </head>
 
 <body class="w-100 h-100 d-flex flex-column justify-content-between">
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main class="container">
+  <main class="container h-50 d-flex flex-column justify-content-between">
     <?php if (isConnected() === false) : ?>
       <h1>Réservaton de la salle 0101</h1>
       <h2>
