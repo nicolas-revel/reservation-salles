@@ -50,17 +50,17 @@ if (isset($_GET["d"])) {
         </div>
         <button type="submit" class="btn btn-secondary my-3" value="connexion">Connexion</button>
       </form>
+      <?php if (isset($curent_user) && !empty($curent_user->getErrorMessage())) : ?>
+        <div class="alert alert-danger w-auto m-3" role="alert">
+          <strong><?= $curent_user->getErrorMessage() ?></strong>
+        </div>
+      <?php endif ?>
     <?php else : ?>
       <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
         Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
       </p>
       <?php header('refresh:3; url=' . $path_index . 'index.php'); ?>
     <?php endif; ?>
-    <?php if (isset($curent_user) && !empty($curent_user->getErrorMessage())) : ?>
-      <div class="alert alert-danger" role="alert">
-        <strong><?= $curent_user->getErrorMessage() ?></strong>
-      </div>
-    <?php endif ?>
   </main>
   <footer>
     <?php require_once($path_config . 'header.php') ?>

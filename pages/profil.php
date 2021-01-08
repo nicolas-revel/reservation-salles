@@ -55,7 +55,7 @@ if (isset($_GET["del"])) {
   </header>
   <main class="container w-75">
     <?php if (isConnected() === true) : ?>
-    <h1 class="my-3">Votre profil</h1>
+      <h1 class="my-3">Votre profil</h1>
       <form action="profil.php" method="POST">
         <h4>Nom d'utilisateur : <?= $_SESSION['user']->getLogin(); ?></h4>
         <div class="form-group my-3">
@@ -78,6 +78,11 @@ if (isset($_GET["del"])) {
       </form>
       <a href="<?= $_SERVER['PHP_SELF'] . '?d' ?>"><button class="btn btn-secondary btn-outline-warning m-4">Déconnexion</button></a>
       <a href="<?= $_SERVER['PHP_SELF'] . '?del' ?>"><button class="btn btn-secondary btn-outline-danger ">Supprimer mon profil</button></a>
+      <?php if (isset($new_user) && !empty($new_user->getErrorMessage())) : ?>
+        <div class="alert alert-danger w-auto m-3" role="alert">
+          <strong><?= $new_user->getErrorMessage() ?></strong>
+        </div>
+      <?php endif ?>
     <?php else : ?>
       <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
         Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.

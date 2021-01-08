@@ -16,7 +16,6 @@ if (!empty($_POST)) {
   $new_event->checkConditionDate();
   var_dump($new_event);
   if (empty($new_event->getErrorMessage())) {
-    // Si il n'y a pas de message d'erreur, envoie l'évènement dans la BDD.
     $new_event->uploadEvent();
   }
 }
@@ -95,7 +94,7 @@ if (isset($_GET["d"])) {
         <button type="submit" class="btn btn-secondary">Enregistrer</button>
       </form>
       <?php if(isset($new_event) && !empty($new_event->getErrorMessage())) : ?>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger w-auto m-3" role="alert">
           <strong><?=$new_event->getErrorMessage()?></strong>
         </div>
       <?php endif ?>

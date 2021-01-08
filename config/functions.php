@@ -17,7 +17,10 @@ function recupAllEvent()
     $event->setLogin_Utilisateur($result[$events]['login']);
     $event->setErrorMessage(null);
     $result[$events] = $event;
-  }if ($result !== null) {
+  }
+  var_dump($result);
+  if ($result !== null) {
+
     return $result;
   } else {
     return false;
@@ -117,6 +120,7 @@ function creaTableEvent(int $col, int $row, int $week)
         if ($table[$row][$col] === $events[$event]->getDebut()) {
           // Si la case correspond au début de l'évènement, alors active start et reserved, sort de la boucle
           $content = "<div class='content'><a href='reservation.php?id={$events[$event]->getId()}'>{$events[$event]->getTitle()}</a></div>";
+          $r_content = "<div class='content'><p class='para-reserved'>Réservé par {$events[$event]->getLoginUtilisateur()}</p></div>";
           $start = true;
           $reserved = true;
           break;
@@ -129,7 +133,6 @@ function creaTableEvent(int $col, int $row, int $week)
           break;
         } else {
           // Sinon, remets tout à null sauf reserved car il reste actif tant qu'il ne rencontre pas de fin
-          $content = "<div class='content'><p class='para-reserved'>Réservé par {$events[$event]->getLoginUtilisateur()}</p></div>";
           $start = null;
           $end = null;
           $table[$row][$col] = $table[$row][$col];
@@ -138,7 +141,7 @@ function creaTableEvent(int $col, int $row, int $week)
       if (!empty($start)) {
         $table[$row][$col] = "<td class = 'table-success base-col'>$content</td>";
       } elseif (!empty($reserved)) {
-        $table[$row][$col] = "<td class = 'table-secondary base-col'>$content</td>";
+        $table[$row][$col] = "<td class = 'table-secondary base-col'>$r_content</td>";
       } elseif (!empty($end)) {
         $table[$row][$col] = "<td class = 'table-dark base-col'>$content</td>";
       } else {

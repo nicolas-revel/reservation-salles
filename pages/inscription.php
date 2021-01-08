@@ -60,7 +60,7 @@ if (isset($_GET["d"])) {
         <button type="submit" class="btn btn-secondary my-3" value="register">Inscription</button>
       </form>
     <?php if (isset($new_user) && !empty($new_user->getErrorMessage())) : ?>
-      <div class="alert alert-danger" role="alert">
+      <div class="alert alert-danger w-auto m-3" role="alert">
         <strong><?= $new_user->getErrorMessage() ?></strong>
       </div>
     <?php endif ?>
