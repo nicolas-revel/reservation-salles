@@ -13,6 +13,10 @@ require_once($path_config . 'config.php');
 $curent_event = new event();
 $curent_event->recupEvent($_GET['id']);
 
+if (isset($_GET["d"])) {
+  $_SESSION['user']->disconnect($path_index);
+}
+
 var_dump($curent_event);
 var_dump($_GET);
 

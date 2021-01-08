@@ -5,21 +5,24 @@ $path_config = '../config/';
 $path_pages = '';
 $path_classes = '../classes/';
 
-require_once($path_config . 'config.php');
-
 include($path_classes . 'user.php');
+
+require_once($path_config . 'config.php');
 
 if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_password'])) {
   // Vérification du mot de passe de l'utilisateur
-  $check_pass = verifPassword($_POST['password'], $_POST['c_password']);
-  if ($check_pass === true) {
+  $new_user = new user($_POST['login'], $_POST['password']);
+  if ($new_user->checkPassword($_POST['password'], $_POST['c_password'])) {
     // Si le mot de passe est bien confirmé, alors on créer un nouvel objet user
-    $new_user = new user($_POST['login'], $_POST['password']);
     $new_user->verifUser($_POST['login']);
     if ($new_user->getErrorMessage() === null) {
       $new_user->register();
     }
   }
+}
+
+if (isset($_GET["d"])) {
+  $_SESSION['user']->disconnect($path_index);
 }
 
 ?>
@@ -38,8 +41,9 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_pa
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main>
+  <main class="container d-flex flex-column">
     <?php if (isConnected() === false) : ?>
+      <h1>Vous inscrire</h1>
       <form action="inscription.php" method="post">
         <div class="form-group">
           <label for="login">Nom d'utilisateurs :</label>
@@ -55,15 +59,16 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['c_pa
         </div>
         <button type="submit" class="btn btn-secondary" value="register">Inscription</button>
       </form>
-    <?php else : ?>
-      <div class="alert alert-warning">
-        <p>
-          Pour faire une inscription, merci de vous déconnecter en premier lieu.
-        </p>
+    <?php if (isset($new_user) && !empty($new_user->getErrorMessage())) : ?>
+      <div class="alert alert-danger" role="alert">
+        <strong><?= $new_user->getErrorMessage() ?></strong>
       </div>
-      <?php
-      header('refresh:3; url=' . $path_index . 'index.php');
-      ?>
+    <?php endif ?>
+    <?php else : ?>
+      <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
+        Pour faire une inscription, merci de vous déconnecter en premier lieu.
+      </p>
+      <?php header('refresh:3; url=' . $path_index . 'index.php'); ?>
     <?php endif; ?>
   </main>
   <footer>

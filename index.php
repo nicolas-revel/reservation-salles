@@ -10,6 +10,10 @@ include($path_classes . 'event.php');
 
 require_once($path_config . 'config.php');
 
+if (isset($_GET["d"])) {
+    $_SESSION['user']->disconnect($path_index);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -26,11 +30,33 @@ require_once($path_config . 'config.php');
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main>
+  <main class="container">
     <?php if (isConnected() === false) : ?>
-      <!-- Affichage des différentes informations concernant le site, la présentation de ce que l'utilsateur peut faire sur le site. -->
+      <h1>Réservaton de la salle 0101</h1>
+      <h2>
+        Bonjour et bienvenue sur le site de réservation de la salle 0101.
+      </h2>
+      <p>
+        Vous pouvez consulter <strong><a href="<?=$path_pages?>planning.php">le planning</a></strong> afin de voir les différentes réservations effectuées sur la salle.
+      </p>
+      <p>
+        Si vous souhaitez réserver la salle 0101, nous vous invitons tout d'abord à <strong><a href="<?=$path_pages?>connexion.php">vous connecter</a></strong>, puis à effectuer une(des) réservation(s) en passant par <strong><a href="<?=$path_pages?>planning.php">le planning</a></strong>.
+      </p>
+      <p>
+        Si vous ne possédez pas encore de compte, vous pouvez <strong><a href="<?=$path_pages?>inscription.php">vous inscrire</a></strong> afin de pouvoir effectuer une(des) réservation(s).
+      </p>
     <?php else : ?>
-      <!-- Affichage des mêmes informations avec en plus un bouton de créations de réservations.-->
+      <h1>Réservaton de la salle 0101</h1>
+      <h2>Bonjour <?=$_SESSION['user']->getLogin();?> et bienvenue sur le site de réservation de la salle 0101</h2>
+      <p>
+        Maintenant que vous êtes connecté, vous pouvez faire <strong><a href="<?=$path_pages?>reservation-form.php">une réservation</a></strong> et consulter <strong><a href="<?=$path_pages?>planning.php">le planning</a></strong>.
+      </p>
+      <p>
+        Vous pouvez aussi consulter <strong><a href="<?=$path_pages?>profil.php">votre profil</a></strong> et modifier vos informations personnelles si vous le souhaitez.
+      </p>
+      <p>
+        Si vous souhaitez inscrire un nouveau compte, nous vous invitons à vous <strong><a href="<?=$path_index?>index.php?d">déconnecter</a></strong> puis à vous inscrire via notre formulaire d'inscription.
+      </p>
     <?php endif; ?>
   </main>
   <footer>

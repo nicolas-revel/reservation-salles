@@ -58,17 +58,17 @@ class user
 
   // Other functions
 
-  function checkPassword($password, $c_password)
+  public function checkPassword($password, $c_password)
   {
     if (!empty($password) && !empty($c_password)) {
       if ($password === $c_password) {
         $this->setErrorMessage(null);
         return true;
       } else {
+        $this->setErrorMessage("Merci de bien confirmer votre nouveau mot de passe");
+        return false;
       }
     }
-    $this->setErrorMessage("Merci de bien confirmer votre nouveau mot de passe");
-    return false;
   }
 
   public function verifUser($login)
@@ -137,15 +137,15 @@ class user
     }
   }
 
-  public function disconnect()
+  public function disconnect($path_index)
   {
     foreach ($this as $propriete => $valeur) {
       $this->$propriete = null;
     }
-    header('Location:../index.php');
+    header('Location:' . $path_index . 'index.php');
   }
 
-  public function delete()
+  public function delete($path_index)
   {
     $pdo = new PDO("mysql:host=localhost;dbname=reservationsalles", "root", "");
     $requete = "DELETE FROM `utilisateurs` WHERE login = :login";
@@ -156,7 +156,7 @@ class user
     foreach ($this as $propriete => $valeur) {
       $this->$propriete = null;
     }
-    header('Location:../index.php');
+    header('Location:' . $path_index . 'index.php');
   }
 
   public function update($login, $password)

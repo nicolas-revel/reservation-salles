@@ -20,6 +20,10 @@ if (!empty($_POST)) {
   }
 }
 
+if (isset($_GET["d"])) {
+  $_SESSION['user']->disconnect($path_index);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +42,7 @@ if (!empty($_POST)) {
   </header>
   <main class="container">
     <?php if (isConnected() === true) : ?>
+      <h1>Créez votre réservation</h1>
       <form action="reservation-form.php" method="post">
         <div class="form-group">
           <label for="title">Titre :</label>
@@ -87,13 +92,16 @@ if (!empty($_POST)) {
         </div>
         <button type="submit" class="btn btn-primary">Enregistrer</button>
       </form>
+      <?php if(isset($new_event) && !empty($new_event->getErrorMessage())) : ?>
+        <div class="alert alert-danger" role="alert">
+          <strong><?=$new_event->getErrorMessage()?></strong>
+        </div>
+      <?php endif ?>
     <?php else : ?>
-      <div class="alert alert-warning" role="alert">
+      <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
         <strong>Vous devez être connecté pour accéder à cette page, vous aller être redirigé vers la page d'accueil.</strong>
-        <?php
-        header('refresh:3; url=' . $path_index . 'index.php');
-        ?>
-      </div>
+      </p>
+      <?php header('refresh:3; url=' . $path_index . 'index.php'); ?>
     <?php endif; ?>
   </main>
   <footer>

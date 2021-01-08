@@ -13,18 +13,26 @@
           <li class="nav-item mx-3">
             <a class="nav-link <?php if ($_SERVER['PHP_SELF'] === '/reservation-salles/pages/connexion.php') : ?>active<?php endif; ?>" href="<?= $path_pages ?>connexion.php">Connexion</a>
           </li>
+          <li class="nav-item mx-3">
+            <a class="nav-link <?php if ($_SERVER['PHP_SELF'] === '/reservation-salles/pages/inscription.php') : ?>active<?php endif; ?>" href="<?= $path_pages ?>inscription.php">Inscription</a>
+          </li>
         <?php else : ?>
           <li class="nav-item mx-3">
             <a class="nav-link <?php if ($_SERVER['PHP_SELF'] === '/reservation-salles/pages/profil.php') : ?>active<?php endif; ?>" href="<?= $path_pages ?>profil.php">Profil</a>
+          </li>
+          <li class="nav-item mx-3 order-1">
+            <a class="nav-link <?php if ($_SERVER['PHP_SELF'] === '/reservation-salles/pages/reservation-form.php') : ?>active<?php endif; ?>" href="<?= $path_pages ?>reservation-form.php">Réserver</a>
           </li>
         <?php endif; ?>
         <li class="nav-item mx-3">
           <a class="nav-link <?php if ($_SERVER['PHP_SELF'] === '/reservation-salles/pages/planning.php') : ?>active<?php endif; ?>" href="<?= $path_pages ?>planning.php">Planning</a>
         </li>
       </ul>
-        <?php if (isConnected() === true) : ?>
-          <a href="<?= $_SERVER['PHP_SELF'] . '?d' ?>"><button class="btn btn-outline-secondary my-2 my-sm-0 mr-5">Se déconnecter</button></a>
-        <?php endif; ?>
+      <?php if (isConnected() === true) : ?>
+        <a href="<?= $_SERVER['PHP_SELF'] . '?d' ?>"><button class="btn btn-outline-danger my-2 my-sm-0 mr-5">Se déconnecter</button></a>
+      <?php else : ?>
+        <a href="<?= $path_pages ?>connexion.php"><button class="btn btn-outline-success my-2 my-sm-0 mr-5">Se connecter</button></a>
+      <?php endif; ?>
     </div>
   </div>
 </nav>

@@ -29,12 +29,12 @@ if (!empty($_SESSION['user'])) {
   }
 }
 
-if (isset($_GET["disc"])) {
-  $_SESSION['user']->disconnect();
+if (isset($_GET["d"])) {
+  $_SESSION['user']->disconnect($path_index);
 }
 
 if (isset($_GET["del"])) {
-  $_SESSION['user']->delete();
+  $_SESSION['user']->delete($path_index);
 }
 
 ?>
@@ -53,8 +53,9 @@ if (isset($_GET["del"])) {
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main>
+  <main class="container">
     <?php if (isConnected() === true) : ?>
+    <h1>Votre profil</h1>
       <form action="profil.php" method="POST">
         <h4>Nom d'utilisateur : <?= $_SESSION['user']->getLogin(); ?></h4>
         <div class="form-group">
@@ -75,16 +76,12 @@ if (isset($_GET["del"])) {
         </div>
         <button type="submit" class="btn btn-secondary" name="maj">Mettre à jour</button>
       </form>
-      <form action="profil.php" method="get">
-        <button class="btn btn-danger" name="del">Supprimer mon profil</button>
-        <button class="btn btn-warning" name="disc">Déconnexion</button>
-      </form>
+      <a href="<?= $_SERVER['PHP_SELF'] . '?d' ?>"><button class="btn btn-secondary btn-outline-warning my-2 my-sm-0 mr-5">Déconnexion</button></a>
+      <a href="<?= $_SERVER['PHP_SELF'] . '?del' ?>"><button class="btn btn-secondary btn-outline-danger my-2 my-sm-0 mr-5">Supprimer mon profil</button></a>
     <?php else : ?>
-      <div class="alert alert-danger">
-        <p>
-          Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
-        </p>
-      </div>
+      <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
+        Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
+      </p>
       <?php
       header('refresh:3; url=' . $path_index . 'index.php');
       die; ?>

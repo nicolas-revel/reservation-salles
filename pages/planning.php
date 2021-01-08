@@ -19,6 +19,10 @@ if (isset($_GET['previous'])) {
   header('Location:planning.php');
 }
 
+if (isset($_GET["d"])) {
+  $_SESSION['user']->disconnect($path_index);
+}
+
 $planning = creaTableEvent(8, 13, $_SESSION['week']);
 
 ?>
@@ -37,12 +41,18 @@ $planning = creaTableEvent(8, 13, $_SESSION['week']);
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main>
+  <main class="h-auto container d-flex flex-column justify-content-evenly">
+    <h1 class="my-4">Planning</h1>
     <?php if (isConnected() === true) : ?>
-      <a class="btn btn-dark" href="<?= $path_pages ?>reservation-form.php" role="button">Faire une réservation</a>
+      <div id="reservation" class="my-3 d-flex flex-row justify-content-between w-75 align-self-center">
+        <h4>Vous souhaitez faire une réservation ?</h4>
+        <a class="btn btn-dark" href="<?= $path_pages ?>reservation-form.php" role="button">Faire une réservation</a>
+      </div>
     <?php endif; ?>
-    <a class="btn btn-dark btn-sm " href="<?= $_SERVER['PHP_SELF'] ?>?previous" role="button">Semaine précédente</a>
-    <a class="btn btn-dark btn-sm " href="<?= $_SERVER['PHP_SELF'] ?>?next" role="button">Semaine suivante</a>
+    <div class="my-3 d-flex flex-row justify-content-between w-50 align-self-center">
+      <a class="btn btn-dark btn-md " href="<?= $_SERVER['PHP_SELF'] ?>?previous" role="button">&lt; Semaine précédente</a>
+          <a class="btn btn-dark btn-md " href="<?= $_SERVER['PHP_SELF'] ?>?next" role="button">Semaine suivante &gt;</a>
+    </div>
     <table class="table">
       <?php dispTableEvent($planning); ?>
     </table>

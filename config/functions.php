@@ -1,16 +1,5 @@
 <?php
 
-function verifPassword($password, $c_password)
-{
-  if (!empty($password) && !empty($c_password)) {
-    if ($password === $c_password) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
 function recupAllEvent()
 {
   $pdo = new PDO('mysql:host=localhost;dbname=reservationsalles', 'root', '');
@@ -59,29 +48,29 @@ function displayMonth($month)
 {
   switch ($month) {
     case '01':
-      return 'Janvier';
+      return '/01';
     case '02':
-      return 'Février';
+      return '/02';
     case '03':
-      return 'Mars';
+      return '/03';
     case '04':
-      return 'Avril';
+      return '/04';
     case '05':
-      return 'Mai';
+      return '/05';
     case '06':
-      return 'Juin';
+      return '/06';
     case '07':
-      return 'Juillet';
+      return '/07';
     case '08':
-      return 'Aout';
+      return '/08';
     case '09':
-      return 'Septembre';
+      return '/09';
     case '10':
-      return 'Octobre';
+      return '/10';
     case '11':
-      return 'Novembre';
+      return '/11';
     case '12':
-      return 'Décembre';
+      return '/12';
   }
 }
 
@@ -94,7 +83,7 @@ function creaTableEvent(int $col, int $row, int $week)
       $date->add(new DateInterval('P' . $i . 'DT' . $j . 'H'));
       if ($date->format('N') == 6 || $date->format('N') == 7) {
         // Si c'est un Samedi ou un Dimanche, la case vaut "Indisponible";
-        $table[$i][$j] = "<td class = 'undisp'>Indisponible</td>";
+        $table[$i][$j] = "<td class='table-danger'>Indisponible</td>";
       } else {
         // Sinon la case prend la valeur de la date générée précédemment;
         $table[$i][$j] = $date->format("Y-m-d H:i");
@@ -116,7 +105,7 @@ function creaTableEvent(int $col, int $row, int $week)
           $jour->add(new DateInterval('P' . $m . 'D'));
           $jsemaine = displayDay($jour->format('N'));
           $mois = displayMonth($jour->format('m'));
-          $table[$i][$j] = "<th class='table-dark' scope='col'>$jsemaine " . $jour->format("d") . " $mois</th>";
+          $table[$i][$j] = "<th class='table-dark' scope='col'>$jsemaine " . $jour->format("d") . "$mois</th>";
         }
       }
     }
@@ -133,6 +122,7 @@ function creaTableEvent(int $col, int $row, int $week)
           break;
         } elseif ($table[$row][$col] === $events[$event]->getFin()) {
           // Si la case correspond à la fin de l'évènement, alors active end et déactive start et reserved, sort de la boucle
+          $content = "Fin de {$events[$event]->getTitle()}";
           $end = true;
           $start = null;
           $reserved = null;
@@ -150,9 +140,9 @@ function creaTableEvent(int $col, int $row, int $week)
       } elseif (!empty($reserved)) {
         $table[$row][$col] = "<td class = 'table-secondary'>$content</td>";
       } elseif (!empty($end)) {
-        $table[$row][$col] = "<td class = 'table-dark'>Fini</td>";
+        $table[$row][$col] = "<td class = 'table-dark'>$content</td>";
       } else {
-        if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class = 'undisp'>Indisponible</td>") {
+        if ($row != 0 && $col != 0 && $table[$row][$col] !== "<td class='table-danger'>Indisponible</td>") {
           $table[$row][$col] = "<td class = 'table-light'><p>Disponible</p></td>";
         }
       }
