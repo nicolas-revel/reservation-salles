@@ -16,6 +16,10 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
   }
 }
 
+if (isset($_GET["d"])) {
+  $_SESSION['user']->disconnect($path_index);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -32,29 +36,31 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
   <header>
     <?php require_once($path_config . 'header.php') ?>
   </header>
-  <main>
+  <main class="container w-50 d-flex flex-column justify-content-between">
     <?php if (isConnected() === false) : ?>
+      <h1>Vous connecter</h1>
       <form action="connexion.php" method="post">
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="login">Nom d'utilisateur :</label>
           <input type="text" name="login" id="login" class="form-control" placeholder="Votre nom d'utilisateur ici" required>
         </div>
-        <div class="form-group">
+        <div class="form-group my-3">
           <label for="password">Mot de passe :</label>
           <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe ici" required>
         </div>
-        <button type="submit" class="btn btn-secondary" value="connexion">Connexion</button>
+        <button type="submit" class="btn btn-secondary my-3" value="connexion">Connexion</button>
       </form>
     <?php else : ?>
-      <div class="alert alert-danger">
-        <p>
-          Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
-        </p>
-      </div>
-      <?php
-      header('refresh:3; url=' . $path_index . 'index.php');
-      die; ?>
+      <p class="w-auto alert alert-warning d-flex justify-content-center align-items-center">
+        Vous ne devriez pas vous trouver sur cette page ! Vous aller être redirigé vers la page d'accueil de notre site.
+      </p>
+      <?php header('refresh:3; url=' . $path_index . 'index.php'); ?>
     <?php endif; ?>
+    <?php if (isset($curent_user) && !empty($curent_user->getErrorMessage())) : ?>
+      <div class="alert alert-danger" role="alert">
+        <strong><?= $curent_user->getErrorMessage() ?></strong>
+      </div>
+    <?php endif ?>
   </main>
   <footer>
     <?php require_once($path_config . 'header.php') ?>
