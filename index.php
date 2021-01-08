@@ -35,7 +35,7 @@ if (isset($_GET["d"])) {
   </header>
   <main class="container h-50 d-flex flex-column justify-content-between">
     <?php if (isConnected() === false) : ?>
-      <h1>Réservaton de la salle 0101</h1>
+      <h1>Réservation de la salle 0101</h1>
       <h2>
         Bonjour et bienvenue sur le site de réservation de la salle 0101.
       </h2>
@@ -49,7 +49,7 @@ if (isset($_GET["d"])) {
         Si vous ne possédez pas encore de compte, vous pouvez <strong><a href="<?=$path_pages?>inscription.php">vous inscrire</a></strong> afin de pouvoir effectuer une(des) réservation(s).
       </p>
     <?php else : ?>
-      <h1>Réservaton de la salle 0101</h1>
+      <h1>Réservation de la salle 0101</h1>
       <h2>Bonjour <?=$_SESSION['user']->getLogin();?> et bienvenue sur le site de réservation de la salle 0101</h2>
       <p>
         Maintenant que vous êtes connecté, vous pouvez faire <strong><a href="<?=$path_pages?>reservation-form.php">une réservation</a></strong> et consulter <strong><a href="<?=$path_pages?>planning.php">le planning</a></strong>.
