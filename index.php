@@ -15,7 +15,7 @@ require_once($path_config . 'config.php');
 if (isset($_GET["d"])) {
     $_SESSION['user']->disconnect($path_index);
 }
-
+var_dump($_SERVER);
 ?>
 
 <!DOCTYPE html>

@@ -24,6 +24,10 @@ if (isset($_GET["d"])) {
   $_SESSION['user']->disconnect($path_index);
 }
 
+if (!isset($_SESSION['week'])) {
+    $_SESSION['week'] = 0;
+}
+
 $planning = creaTableEvent(8, 13, $_SESSION['week']);
 
 ?>

@@ -18,7 +18,6 @@ function recupAllEvent()
     $event->setErrorMessage(null);
     $result[$events] = $event;
   }
-  var_dump($result);
   if ($result !== null) {
 
     return $result;
